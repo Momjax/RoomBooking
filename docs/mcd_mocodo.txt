@@ -1,0 +1,23 @@
+utilisateur: _id, email, firstname, lastname, password
+FAIRE, 0n utilisateur, 11 reservation
+reservation: _id, reservation_start, reservation_end
+CONCERNER, 11 reservation, 0n salle
+salle: _id, nom_salle, capacite, description
+
+/XT\ utilisateur -> administrateur, etudiant, coordinateur
+::
+::
+::
+POSSEDER, 0n salle, 11 equipement
+
+administrateur: _id
+etudiant: _id
+::
+coordinateur: _id
+equipement: _id, nom_equipement
+
+::
+APPARTENIR, 11 etudiant, 1n classe
+classe: _id, classe_name
+GESTION_CLASSE, 0n coordinateur, 0n classe
+::

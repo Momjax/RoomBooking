@@ -1,0 +1,21 @@
+Jalon;Tache;Phase;Date Debut;Date Fin;Duree (jours);Dependance;Statut
+J1;Init Symfony + bundles;Phase 1 - Init technique;23/02/2026;23/02/2026;1;;A faire
+J2;Config MySQL + .env;Phase 1 - Init technique;23/02/2026;23/02/2026;1;J1;A faire
+J3;Entites Doctrine (User Room Reservation);Phase 1 - Init technique;24/02/2026;24/02/2026;1;J2;A faire
+J4;Config Git (.gitignore main);Phase 1 - Init technique;24/02/2026;24/02/2026;1;J2;A faire
+J5;Migrations + Fixtures;Phase 1 - Init technique;24/02/2026;24/02/2026;1;J3;A faire
+J6;Auth login/logout + access_control;Phase 2 - Auth;25/02/2026;25/02/2026;1;J5;A faire
+J7;Roles (ADMIN/PROF/ETUDIANT);Phase 2 - Auth;25/02/2026;25/02/2026;1;J6;A faire
+J8;CSRF + validation + securite XSS;Phase 2 - Auth;25/02/2026;25/02/2026;1;J7;A faire
+J9;CRUDs (salles users classes);Phase 3 - Fonctions;25/02/2026;26/02/2026;2;J8;A faire
+J10;Regles metier reservation;Phase 3 - Fonctions;26/02/2026;26/02/2026;1;J9;A faire
+J11;Pages Twig (accueil dashboard profil);Phase 3 - Fonctions;26/02/2026;26/02/2026;1;J9;A faire
+J12;Flash messages + notifications;Phase 3 - Fonctions;26/02/2026;26/02/2026;1;J10;A faire
+J13;Integration Tailwind CSS + responsive;Phase 4 - Interface;27/02/2026;27/02/2026;1;J12;A faire
+J14;JS calendrier + selecteur creneaux;Phase 4 - Interface;27/02/2026;27/02/2026;1;J13;A faire
+J15;Dashboard utilisateur (reservations);Phase 4 - Interface;27/02/2026;27/02/2026;1;J13;A faire
+J16;Tests fonctionnels + swagger;Phase 5 - Tests;27/02/2026;27/02/2026;1;J14;A faire
+J17;Environnement staging;Phase 5 - Tests;27/02/2026;27/02/2026;1;J16;A faire
+J18;Environnement production;Phase 6 - Deploy;28/02/2026;28/02/2026;1;J17;A faire
+J19;Deploiement prod;Phase 6 - Deploy;28/02/2026;28/02/2026;1;J18;A faire
+J20;Recette finale + monitoring;Phase 6 - Deploy;28/02/2026;28/02/2026;1;J19;A faire

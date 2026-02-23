@@ -1,0 +1,36 @@
+@startgantt
+title Planning RoomBooking (23-27 Fév 2026)
+projectscale daily
+printscale daily
+language fr
+
+Project starts 2026-02-23
+
+-- Phase 1 : Init technique --
+[J1 - Init Symfony + bundles] starts 2026-02-23 and lasts 1 day
+[J2 - Config MySQL + .env] starts at [J1 - Init Symfony + bundles]'s end and lasts 1 day
+[J3 - Entités Doctrine] starts at [J2 - Config MySQL + .env]'s end and lasts 1 day
+[J4 - Config Git] starts at [J2 - Config MySQL + .env]'s end and lasts 1 day
+[J5 - Migrations + Fixtures] starts at [J3 - Entités Doctrine]'s end and lasts 1 day
+
+-- Phase 2 : Auth & Sécurité --
+[J6 - Auth login/logout] starts at [J5 - Migrations + Fixtures]'s end and lasts 1 day
+[J7 - Rôles (ADMIN/PROF/ETUDIANT)] starts at [J6 - Auth login/logout]'s end and lasts 1 day
+[J8 - CSRF + sécurité XSS] starts at [J7 - Rôles (ADMIN/PROF/ETUDIANT)]'s end and lasts 1 day
+
+-- Phase 3 : Fonctions principales --
+[J9 - CRUDs] starts at [J8 - CSRF + sécurité XSS]'s end and lasts 2 days
+[J10 - Règles métier réservation] starts at [J9 - CRUDs]'s end and lasts 1 day
+[J11 - Pages Twig] starts at [J9 - CRUDs]'s end and lasts 1 day
+[J12 - Flash messages] starts at [J10 - Règles métier réservation]'s end and lasts 1 day
+
+-- Phase 4 : Interface & UX --
+[J13 - Tailwind CSS + responsive] starts at [J12 - Flash messages]'s end and lasts 1 day
+[J14 - JS calendrier] starts at [J13 - Tailwind CSS + responsive]'s end and lasts 1 day
+[J15 - Dashboard utilisateur] starts at [J13 - Tailwind CSS + responsive]'s end and lasts 1 day
+
+-- Phase 5 : Tests & qualité --
+[J16 - Tests fonctionnels] starts at [J14 - JS calendrier]'s end and lasts 1 day
+[J17 - Environnement staging] starts at [J16 - Tests fonctionnels]'s end and lasts 1 day
+
+@endgantt

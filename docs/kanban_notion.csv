@@ -1,0 +1,40 @@
+Tache;Phase;Jalon;Jour Prevu;Priorite;Statut;Description
+Init Symfony + bundles;Phase 1 - Init technique;J1;Dim 23;Haute;A faire;Creer le projet setup des bundles doctrine security twig maker
+Config MySQL + .env;Phase 1 - Init technique;J2;Dim 23;Haute;A faire;Connexion locale et distante a MySQL
+Entite User;Phase 1 - Init technique;J3;Lun 24;Haute;A faire;email mdp prenom nom role created_at
+Entite Room;Phase 1 - Init technique;J3;Lun 24;Haute;A faire;nom capacite description
+Entite Reservation;Phase 1 - Init technique;J3;Lun 24;Haute;A faire;reservation_start reservation_end
+Entite Classe;Phase 1 - Init technique;J3;Lun 24;Haute;A faire;classe_name
+Entite Equipement;Phase 1 - Init technique;J3;Lun 24;Moyenne;A faire;nom_equipement
+Relations Doctrine;Phase 1 - Init technique;J3;Lun 24;Haute;A faire;ManyToOne OneToMany ManyToMany
+Init Git + .gitignore;Phase 1 - Init technique;J4;Lun 24;Moyenne;A faire;branche main conventions de commit
+Generer migrations;Phase 1 - Init technique;J5;Lun 24;Haute;A faire;Execution des migrations
+Creer fixtures;Phase 1 - Init technique;J5;Lun 24;Moyenne;A faire;Users salles reservations de test
+Config security.yaml;Phase 2 - Auth;J6;Mar 25;Haute;A faire;Provider firewall
+Formulaire login Twig;Phase 2 - Auth;J6;Mar 25;Haute;A faire;Page de connexion
+Implementer logout;Phase 2 - Auth;J6;Mar 25;Haute;A faire;Deconnexion
+Config access_control par role;Phase 2 - Auth;J7;Mar 25;Haute;A faire;ROLE_ADMIN ROLE_PROF ROLE_USER
+Restreindre routes admin;Phase 2 - Auth;J7;Mar 25;Haute;A faire;/admin/* reserve aux admins
+Protection CSRF;Phase 2 - Auth;J8;Mar 25;Moyenne;A faire;Sur tous les formulaires
+Validation inputs;Phase 2 - Auth;J8;Mar 25;Moyenne;A faire;Assert Symfony
+CRUD Salles;Phase 3 - Fonctions;J9;Mar 25;Haute;A faire;Creer lister modifier supprimer
+CRUD Classes;Phase 3 - Fonctions;J9;Mer 26;Haute;A faire;Creer lister detail supprimer
+CRUD Utilisateurs;Phase 3 - Fonctions;J9;Mer 26;Haute;A faire;Creer etudiant prof supprimer
+Reset mot de passe;Phase 3 - Fonctions;J9;Mer 26;Moyenne;A faire;Admin reset etudiant/prof
+Formulaire reservation;Phase 3 - Fonctions;J10;Mer 26;Haute;A faire;Date + creneau horaire
+Verification disponibilites;Phase 3 - Fonctions;J10;Mer 26;Haute;A faire;Avant reservation
+Empecher doubles reservations;Phase 3 - Fonctions;J10;Mer 26;Haute;A faire;Meme salle meme creneau
+Page accueil Twig;Phase 3 - Fonctions;J11;Mer 26;Moyenne;A faire;Template accueil
+Page dashboard Twig;Phase 3 - Fonctions;J11;Mer 26;Haute;A faire;Vue principale utilisateur
+Page profil Twig;Phase 3 - Fonctions;J11;Mer 26;Moyenne;A faire;Profil utilisateur
+Flash messages;Phase 3 - Fonctions;J12;Mer 26;Moyenne;A faire;Succes erreur info
+Integration Tailwind CSS;Phase 4 - Interface;J13;Jeu 27;Haute;A faire;Sur toutes les vues
+Layout responsive;Phase 4 - Interface;J13;Jeu 27;Haute;A faire;Mobile + desktop
+Navbar selon role;Phase 4 - Interface;J13;Jeu 27;Moyenne;A faire;Menu adapte au role
+Calendrier interactif JS;Phase 4 - Interface;J14;Jeu 27;Haute;A faire;Vue semaine/jour
+Selecteur creneaux JS;Phase 4 - Interface;J14;Jeu 27;Haute;A faire;Selection horaires
+Dashboard reservations;Phase 4 - Interface;J15;Jeu 27;Haute;A faire;Liste des reservations
+Bouton annuler reservation;Phase 4 - Interface;J15;Jeu 27;Haute;A faire;Suppression reservation
+Tests login;Phase 5 - Tests;J16;Ven 28;Moyenne;A faire;Parcours connexion
+Tests reserver + annuler;Phase 5 - Tests;J16;Ven 28;Moyenne;A faire;Parcours reservation
+Config staging;Phase 5 - Tests;J17;Ven 28;Moyenne;A faire;APP_ENV logs variables

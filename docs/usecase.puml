@@ -1,0 +1,61 @@
+@startuml RoomBooking - Use Case
+
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+actor "Étudiant" as etudiant
+actor "Professeur" as prof
+actor "Admin" as admin
+
+' Héritage : chaque rôle supérieur hérite des droits du rôle inférieur
+prof --|> etudiant
+admin --|> prof
+
+rectangle "RoomBooking" {
+
+  package "Authentification" {
+    usecase "Se connecter / déconnecter" as UC_auth
+  }
+
+  package "Salles & Réservations" {
+    usecase "Lister les salles" as UC_rooms
+    usecase "Voir détail + disponibilités" as UC_detail
+    usecase "Réserver une salle" as UC_book
+    usecase "Annuler sa réservation" as UC_cancel
+  }
+
+  package "Gestion Classes\n(Professeur)" {
+    usecase "Consulter ses classes" as UC_classes
+    usecase "Gérer étudiants\nd'une classe" as UC_manage_students
+  }
+
+  package "Administration\n(Admin uniquement)" {
+    usecase "CRUD Salles" as UC_crud_rooms
+    usecase "CRUD Classes" as UC_crud_classes
+    usecase "CRUD Utilisateurs\n(prof + étudiants)" as UC_crud_users
+    usecase "Reset mot de passe" as UC_reset
+  }
+}
+
+' Étudiant : actions de base
+etudiant --> UC_auth
+etudiant --> UC_rooms
+etudiant --> UC_detail
+etudiant --> UC_book
+etudiant --> UC_cancel
+
+' Professeur : gestion de ses classes (le reste est hérité)
+prof --> UC_classes
+prof --> UC_manage_students
+
+' Admin : administration (le reste est hérité)
+admin --> UC_crud_rooms
+admin --> UC_crud_classes
+admin --> UC_crud_users
+admin --> UC_reset
+
+' Include
+UC_book ..> UC_detail : <<include>>
+
+@enduml
