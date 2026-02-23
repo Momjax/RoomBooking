@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - RoomBooking{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    }
+    .container { width: 100%; max-width: 420px; }
+    .login-card {
+        background: rgba(30, 41, 59, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 20px;
+        padding: 3rem 2.5rem;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+    .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .login-header h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+    .login-header h1 span { color: #38bdf8; }
+    .login-header h1 .accent { color: #f472b6; }
+    .login-header p {
+        color: #94a3b8;
+        font-size: 0.95rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #cbd5e1;
+        font-size: 0.9rem;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        background: #0f172a;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        color: #e2e8f0;
+        font-size: 1rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        outline: none;
+    }
+    .form-group input:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    .form-group input::placeholder { color: #64748b; }
+    .btn-login {
+        width: 100%;
+        padding: 0.9rem;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+    }
+    .error-message {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid #ef4444;
+        color: #fca5a5;
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+    .login-icon {
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="login-card">
+    <div class="login-header">
+        <div class="login-icon">🏫</div>
+        <h1><span>Room</span><span class="accent">Booking</span></h1>
+        <p>MediaSchool IRIS Nice</p>
+    </div>
+
+    {% if error %}
+        <div class="error-message">
+            ⚠️ {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        <div class="form-group">
+            <label for="username">📧 Email</label>
+            <input type="email" id="username" name="_username" value="{{ last_username }}" placeholder="prenom.nom@mediaschool.me" required autofocus>
+        </div>
+
+        <div class="form-group">
+            <label for="password">🔒 Mot de passe</label>
+            <input type="password" id="password" name="_password" placeholder="Votre mot de passe" required>
+        </div>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <button type="submit" class="btn-login">Se connecter</button>
+    </form>
+</div>
+{% endblock %}
