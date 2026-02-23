@@ -80,14 +80,15 @@
     <nav class="navbar">
         <a href="{{ path('app_dashboard') }}" class="navbar-brand">Room<span>Booking</span></a>
         <div class="navbar-nav">
-            <a href="{{ path('app_dashboard') }}">🏠 Dashboard</a>
+            <a href="{{ path('app_dashboard') }}">🏠 Salles</a>
+            <a href="{{ path('app_my_reservations') }}">📅 Mes Réservations</a>
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('app_admin') }}">⚙️ Admin</a>
             {% endif %}
             {% if is_granted('ROLE_PROFESSEUR') %}
                 <a href="{{ path('app_coordinator') }}">📚 Mes classes</a>
             {% endif %}
-            <span class="navbar-user">👤 {{ app.user.fullName }}</span>
+            <a href="{{ path('app_profile') }}" class="navbar-user">👤 {{ app.user.firstname }}</a>
             <a href="{{ path('app_logout') }}" class="btn-logout">Déconnexion</a>
         </div>
     </nav>
