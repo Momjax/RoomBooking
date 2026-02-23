@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Réservations - RoomBooking{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .page-title { margin-bottom: 2rem; color: #f472b6; font-weight: 800; }
+    .res-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: border-color 0.2s;
+    }
+    .res-card:hover { border-color: #38bdf8; }
+    .room-name { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; }
+    .res-date { color: #94a3b8; font-size: 0.9rem; margin-top: 0.3rem; }
+    .status-tag {
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    .status-active { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+    .status-past { background: rgba(100, 116, 139, 0.15); color: #64748b; }
+    .btn-cancel {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.85rem;
+    }
+    .btn-cancel:hover { background: #dc2626; }
+</style>
+{% endblock %}
+
+{% block body %}
+<h1 class="page-title">📅 Mon historique de réservations</h1>
+
+{% for res in reservations %}
+    <div class="res-card">
+        <div>
+            <div class="room-name">{{ res.room.nomSalle }}</div>
+            <div class="res-date">
+                Le {{ res.reservationStart|date('d/m/Y') }} 
+                de {{ res.reservationStart|date('H:i') }} à {{ res.reservationEnd|date('H:i') }}
+            </div>
+            {% if res.reservationStart < date() %}
+                <span class="status-tag status-past">Passée</span>
+            {% else %}
+                <span class="status-tag status-active">À venir</span>
+            {% endif %}
+        </div>
+        
+        {% if res.reservationStart > date() %}
+            <form method="post" action="{{ path('app_reservation_cancel', {id: res.id}) }}" onsubmit="return confirm('Annuler cette réservation ?')">
+                <button class="btn-cancel">Annuler</button>
+            </form>
+        {% endif %}
+    </div>
+{% else %}
+    <div style="text-align: center; color: #64748b; padding: 4rem;">
+        Vous n'avez aucune réservation pour le moment.
+    </div>
+{% endfor %}
+
+{% endblock %}

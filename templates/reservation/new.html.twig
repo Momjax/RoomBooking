@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réserver {{ room.nomSalle }} - RoomBooking{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .booking-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 20px;
+        padding: 3rem;
+        max-width: 700px;
+        margin: 2rem auto;
+    }
+    .room-header { margin-bottom: 2.5rem; border-bottom: 1px solid #334155; padding-bottom: 1.5rem; }
+    .room-header h1 { color: #38bdf8; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .row { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .col { flex: 1; }
+    label { display: block; color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.5rem; font-weight: 600; }
+    input {
+        width: 100%;
+        background: #0f172a;
+        border: 2px solid #334155;
+        border-radius: 12px;
+        color: white;
+        padding: 0.8rem;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    input:focus { border-color: #38bdf8; }
+    .btn-book {
+        width: 100%;
+        background: linear-gradient(135deg, #38bdf8, #818cf8);
+        color: #0f172a;
+        border: none;
+        padding: 1.2rem;
+        border-radius: 14px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-book:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="booking-card">
+    <div class="room-header">
+        <h1>🗓️ Réserver : {{ room.nomSalle }}</h1>
+        <p style="color: #64748b;">👥 Capacité max : {{ room.capacite }} personnes</p>
+    </div>
+
+    <form method="post">
+        <div class="row">
+            <div class="col">
+                <label>Date du créneau</label>
+                <input type="date" name="start_date" id="start_date" required min="{{ "now"|date("Y-m-d") }}">
+                <input type="hidden" name="end_date" id="end_date">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <label>Heure de début</label>
+                <input type="time" name="start_time" required>
+            </div>
+            <div class="col">
+                <label>Heure de fin</label>
+                <input type="time" name="end_time" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-book">Confirmer la réservation</button>
+    </form>
+
+    <script>
+        // On synchronise la date de fin avec la date de début automatiquement
+        document.getElementById('start_date').addEventListener('change', function() {
+            document.getElementById('end_date').value = this.value;
+        });
+    </script>
+    
+    <a href="{{ path('app_dashboard') }}" style="display: block; text-align: center; margin-top: 2rem; color: #64748b; text-decoration: none;">← Retour aux salles</a>
+</div>
+{% endblock %}
