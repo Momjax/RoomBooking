@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration - RoomBooking{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .admin-header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .admin-header p { color: #94a3b8; margin-bottom: 2rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card {
+        background: linear-gradient(135deg, #1e293b, #334155);
+        border: 1px solid #475569; border-radius: 16px; padding: 1.5rem;
+        text-align: center; transition: transform 0.2s; cursor: pointer; text-decoration: none;
+    }
+    .stat-card:hover { transform: translateY(-3px); }
+    .stat-card .stat-value { font-size: 2.5rem; font-weight: 800; }
+    .stat-card .stat-label { color: #94a3b8; font-size: 0.9rem; margin-top: 0.3rem; }
+    .stat-card.rooms .stat-value { color: #38bdf8; }
+    .stat-card.users .stat-value { color: #a78bfa; }
+    .stat-card.classes .stat-value { color: #34d399; }
+    .admin-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+    .admin-link {
+        background: #1e293b; border: 1px solid #334155; border-radius: 16px;
+        padding: 1.5rem; text-decoration: none; color: #e2e8f0;
+        transition: border-color 0.2s, transform 0.2s; display: block;
+    }
+    .admin-link:hover { border-color: #6366f1; transform: translateY(-2px); }
+    .admin-link h3 { margin-bottom: 0.5rem; }
+    .admin-link p { color: #94a3b8; font-size: 0.85rem; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="admin-header">
+    <h1>⚙️ Administration</h1>
+    <p>Gestion globale de l'application RoomBooking</p>
+</div>
+
+<div class="stats">
+    <a href="{{ path('app_admin_rooms') }}" class="stat-card rooms">
+        <div class="stat-value">{{ totalRooms }}</div>
+        <div class="stat-label">🏢 Salles</div>
+    </a>
+    <a href="{{ path('app_admin_users') }}" class="stat-card users">
+        <div class="stat-value">{{ totalUsers }}</div>
+        <div class="stat-label">👥 Utilisateurs</div>
+    </a>
+    <a href="{{ path('app_admin_classes') }}" class="stat-card classes">
+        <div class="stat-value">{{ totalClasses }}</div>
+        <div class="stat-label">🎓 Classes</div>
+    </a>
+</div>
+
+<div class="admin-links">
+    <a href="{{ path('app_admin_rooms') }}" class="admin-link">
+        <h3>🏢 Gérer les salles</h3>
+        <p>Créer, voir et supprimer des salles avec leurs équipements</p>
+    </a>
+    <a href="{{ path('app_admin_classes') }}" class="admin-link">
+        <h3>🎓 Gérer les classes</h3>
+        <p>Créer et gérer les promotions et leurs étudiants</p>
+    </a>
+    <a href="{{ path('app_admin_users') }}" class="admin-link">
+        <h3>👥 Gérer les utilisateurs</h3>
+        <p>Créer des étudiants, coordinateurs, réinitialiser les mots de passe</p>
+    </a>
+</div>
+{% endblock %}

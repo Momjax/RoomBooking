@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}Créer une salle - Admin{% endblock %}
+{% block stylesheets %}
+<style>
+    .form-card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2rem; max-width: 600px; }
+    .form-card h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; color: #cbd5e1; font-size: 0.9rem; }
+    .form-group input, .form-group textarea { width: 100%; padding: 0.7rem; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: #e2e8f0; font-size: 0.95rem; outline: none; }
+    .form-group input:focus, .form-group textarea:focus { border-color: #6366f1; }
+    .form-group small { color: #64748b; font-size: 0.8rem; }
+    .btn-submit { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; padding: 0.8rem 2rem; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; }
+    .btn-submit:hover { transform: translateY(-2px); }
+    .btn-back { color: #94a3b8; text-decoration: none; margin-right: 1rem; }
+</style>
+{% endblock %}
+{% block body %}
+<div class="form-card">
+    <h1>🏢 Créer une salle</h1>
+    <form method="post">
+        <div class="form-group">
+            <label for="nom_salle">Nom de la salle</label>
+            <input type="text" id="nom_salle" name="nom_salle" required placeholder="Ex: Salle Ada Lovelace">
+        </div>
+        <div class="form-group">
+            <label for="capacite">Capacité</label>
+            <input type="number" id="capacite" name="capacite" required min="1" placeholder="30">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3" placeholder="Description de la salle..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="equipements">Équipements</label>
+            <input type="text" id="equipements" name="equipements" placeholder="Vidéoprojecteur, Wi-Fi, Tableau blanc">
+            <small>Séparez les équipements par des virgules</small>
+        </div>
+        <a href="{{ path('app_admin_rooms') }}" class="btn-back">← Retour</a>
+        <button type="submit" class="btn-submit">Créer la salle</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+{% block title %}Créer un utilisateur - Admin{% endblock %}
+{% block stylesheets %}
+<style>
+    .form-card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2rem; max-width: 600px; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; color: #cbd5e1; font-size: 0.9rem; }
+    .form-group input, .form-group select { width: 100%; padding: 0.7rem; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: #e2e8f0; font-size: 0.95rem; outline: none; }
+    .form-group input:focus, .form-group select:focus { border-color: #6366f1; }
+    .btn-submit { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; padding: 0.8rem 2rem; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; }
+    .btn-back { display: inline-block; margin-top: 1rem; color: #94a3b8; text-decoration: none; font-size: 0.9rem; margin-right: 1.5rem; }
+</style>
+<script>
+    function toggleClasseSelect() {
+        const role = document.getElementById('role').value;
+        const classeGroup = document.getElementById('classe-group');
+        if (role === 'ROLE_USER') {
+            classeGroup.style.display = 'block';
+        } else {
+            classeGroup.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}
+{% block body %}
+<div class="form-card">
+    <h1>👥 Créer un utilisateur</h1>
+    <form method="post">
+        <div class="form-group">
+            <label for="firstname">Prénom</label>
+            <input type="text" id="firstname" name="firstname" required placeholder="Ex: Jean">
+        </div>
+        <div class="form-group">
+            <label for="lastname">Nom</label>
+            <input type="text" id="lastname" name="lastname" required placeholder="Ex: Dupont">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="jean.dupont@mediaschool.me">
+        </div>
+        <div class="form-group">
+            <label for="password">Mot de passe temporaire</label>
+            <input type="password" id="password" name="password" required placeholder="••••••••">
+        </div>
+        <div class="form-group">
+            <label for="role">Rôle</label>
+            <select id="role" name="role" required onchange="toggleClasseSelect()">
+                <option value="ROLE_USER">Étudiant / Élève</option>
+                <option value="ROLE_PROFESSEUR">Coordinateur / Professeur</option>
+                <option value="ROLE_ADMIN">Administrateur</option>
+            </select>
+        </div>
+        <div class="form-group" id="classe-group">
+            <label for="classe_id">Classe (pour les étudiants)</label>
+            <select id="classe_id" name="classe_id">
+                <option value="">-- Choisir une classe --</option>
+                {% for classe in classes %}
+                    <option value="{{ classe.id }}">{{ classe.classeName }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <a href="{{ path('app_admin_users') }}" class="btn-back">← Annuler</a>
+        <button type="submit" class="btn-submit">Créer l'utilisateur</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ classe.classeName }} - Coordinator{% endblock %}
+{% block stylesheets %}
+<style>
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .btn-add { background: #38bdf8; color: #0f172a; padding: 0.6rem 1.2rem; border-radius: 10px; text-decoration: none; font-weight: 700; }
+    .table-container { background: #1e293b; border: 1px solid #334155; border-radius: 16px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #334155; color: #94a3b8; padding: 1rem; text-align: left; font-size: 0.85rem; }
+    td { padding: 1rem; border-bottom: 1px solid #1e293b; }
+    .btn-delete { background: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
+</style>
+{% endblock %}
+{% block body %}
+<div class="page-header">
+    <div>
+        <h1>🎓 {{ classe.classeName }}</h1>
+        <p style="color: #94a3b8;">Liste des étudiants de la promotion</p>
+    </div>
+    <a href="{{ path('app_coordinator_add_student', {id: classe.id}) }}" class="btn-add">+ Ajouter un étudiant</a>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead><tr><th>Étudiant</th><th>Email</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for student in classe.etudiants %}
+            <tr>
+                <td><strong>{{ student.fullName }}</strong></td>
+                <td>{{ student.email }}</td>
+                <td>
+                    <form method="post" action="{{ path('app_coordinator_remove_student', {classeId: classe.id, studentId: student.id}) }}" onsubmit="return confirm('Retirer cet étudiant de la classe ?')">
+                        <button class="btn-delete">Retirer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="3" style="text-align: center; color: #64748b; padding: 2rem;">Aucun étudiant dans cette classe.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<a href="{{ path('app_coordinator') }}" style="display: inline-block; margin-top: 1.5rem; color: #94a3b8; text-decoration: none;">← Retour à mes classes</a>
+{% endblock %}

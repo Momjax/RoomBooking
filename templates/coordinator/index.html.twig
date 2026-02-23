@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mes Classes - Coordinator{% endblock %}
+{% block stylesheets %}
+<style>
+    .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: #38bdf8; }
+    .classes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .classe-card {
+        background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2rem;
+        text-decoration: none; color: #e2e8f0; transition: transform 0.2s, border-color 0.2s;
+    }
+    .classe-card:hover { transform: translateY(-3px); border-color: #38bdf8; }
+    .classe-card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .classe-card p { color: #94a3b8; font-size: 0.9rem; }
+</style>
+{% endblock %}
+{% block body %}
+<h1 class="section-title">📚 Mes classes gérées</h1>
+<div class="classes-grid">
+    {% for classe in classes %}
+        <a href="{{ path('app_coordinator_classe_show', {id: classe.id}) }}" class="classe-card">
+            <h3>{{ classe.classeName }}</h3>
+            <p>👥 {{ classe.etudiants|length }} étudiants</p>
+        </a>
+    {% else %}
+        <div style="background: #1e293b; padding: 2rem; border-radius: 16px; text-align: center; color: #64748b;">
+            Vous ne gérez actuellement aucune classe.
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

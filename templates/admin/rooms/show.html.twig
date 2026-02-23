@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ room.nomSalle }} - Admin{% endblock %}
+{% block stylesheets %}
+<style>
+    .room-detail { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2rem; max-width: 600px; }
+    .room-detail h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+    .info-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid #334155; }
+    .info-label { color: #94a3b8; }
+    .info-value { font-weight: 600; }
+    .equip-list { margin-top: 1rem; }
+    .equip-tag { background: rgba(99,102,241,0.15); color: #a5b4fc; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; margin-right: 0.4rem; display: inline-block; margin-bottom: 0.4rem; }
+    .btn-back { color: #94a3b8; text-decoration: none; display: inline-block; margin-top: 1.5rem; }
+</style>
+{% endblock %}
+{% block body %}
+<div class="room-detail">
+    <h1>🏢 {{ room.nomSalle }}</h1>
+    <div class="info-row"><span class="info-label">Capacité</span><span class="info-value">{{ room.capacite }} places</span></div>
+    <div class="info-row"><span class="info-label">Description</span><span class="info-value">{{ room.description ?? 'Aucune' }}</span></div>
+    <div class="equip-list">
+        <strong>Équipements :</strong><br><br>
+        {% for e in room.equipements %}
+            <span class="equip-tag">{{ e.nomEquipement }}</span>
+        {% else %}
+            <em style="color:#64748b">Aucun équipement</em>
+        {% endfor %}
+    </div>
+    <a href="{{ path('app_admin_rooms') }}" class="btn-back">← Retour aux salles</a>
+</div>
+{% endblock %}

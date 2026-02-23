@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block title %}Classes - Admin{% endblock %}
+{% block stylesheets %}
+<style>
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .page-header h1 { font-size: 1.5rem; }
+    .btn-create { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 0.7rem 1.5rem; border-radius: 12px; text-decoration: none; font-weight: 600; }
+    .table-container { background: #1e293b; border: 1px solid #334155; border-radius: 16px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #334155; color: #94a3b8; padding: 1rem; text-align: left; font-size: 0.85rem; text-transform: uppercase; }
+    td { padding: 1rem; border-bottom: 1px solid #1e293b; }
+    tr:hover td { background: rgba(99, 102, 241, 0.05); }
+    .btn-danger { background: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
+    .btn-view { background: #38bdf8; color: #0f172a; padding: 0.4rem 0.8rem; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 600; }
+</style>
+{% endblock %}
+{% block body %}
+<div class="page-header">
+    <h1>🎓 Gestion des classes</h1>
+    <a href="{{ path('app_admin_classe_create') }}" class="btn-create">+ Créer une classe</a>
+</div>
+<div class="table-container">
+    <table>
+        <thead><tr><th>Nom</th><th>Nb étudiants</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for classe in classes %}
+            <tr>
+                <td><strong>{{ classe.classeName }}</strong></td>
+                <td>{{ classe.etudiants|length }} étudiants</td>
+                <td>
+                    <a href="{{ path('app_admin_classe_show', {id: classe.id}) }}" class="btn-view">Voir</a>
+                    <form method="post" action="{{ path('app_admin_classe_delete', {id: classe.id}) }}" style="display:inline" onsubmit="return confirm('Supprimer cette classe ?')">
+                        <button class="btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
