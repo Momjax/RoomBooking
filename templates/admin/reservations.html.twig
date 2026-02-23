@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gestion des Réservations - Admin{% endblock %}
+{% block stylesheets %}
+<style>
+    .table-container { background: #1e293b; border-radius: 16px; overflow: hidden; border: 1px solid #334155; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #334155; color: #94a3b8; padding: 1rem; text-align: left; font-size: 0.85rem; }
+    td { padding: 1rem; border-bottom: 1px solid #1e293b; color: #e2e8f0; }
+    .btn-cancel { background: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
+</style>
+{% endblock %}
+{% block body %}
+<h1 style="margin-bottom: 2rem;">🛡️ Toutes les réservations</h1>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Salle</th>
+                <th>Utilisateur</th>
+                <th>Date / Heure</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for res in reservations %}
+                <tr>
+                    <td><strong>{{ res.room.nomSalle }}</strong></td>
+                    <td>{{ res.utilisateur.fullName }} ({{ res.utilisateur.email }})</td>
+                    <td>Le {{ res.reservationStart|date('d/m/Y') }} à {{ res.reservationStart|date('H:i') }}</td>
+                    <td>
+                        <form method="post" action="{{ path('app_reservation_cancel', {id: res.id}) }}" onsubmit="return confirm('Supprimer cette réservation ?')">
+                            <button class="btn-cancel">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4" style="text-align: center; padding: 2rem; color: #64748b;">Aucune réservation enregistrée.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
