@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un étudiant - {{ classe.classeName }}{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .form-card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2.5rem; max-width: 600px; margin: 0 auto; }
+    .form-card h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #f472b6; }
+    .form-card p { color: #94a3b8; margin-bottom: 2rem; font-size: 0.9rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #cbd5e1; font-size: 0.9rem; }
+    .form-group select { width: 100%; padding: 0.8rem 1rem; background: #0f172a; border: 1px solid #334155; border-radius: 12px; color: #e2e8f0; font-size: 1rem; outline: none; }
+    .btn-submit { width: 100%; padding: 1rem; background: linear-gradient(135deg, #38bdf8, #818cf8); color: #0f172a; border: none; border-radius: 12px; font-size: 1rem; font-weight: 800; cursor: pointer; margin-top: 1rem; }
+    .no-students { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #fca5a5; padding: 1rem; border-radius: 12px; text-align: center; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="form-card">
+    <h1>⚓ Inscrire un étudiant</h1>
+    <p>Affectation à la classe : <strong>{{ classe.classeName }}</strong></p>
+
+    {% if students|length > 0 %}
+        <form method="post">
+            <div class="form-group">
+                <label for="student_id">Choisir un étudiant (parmi ceux sans classe)</label>
+                <select id="student_id" name="student_id" required>
+                    <option value="">-- Sélectionner un étudiant --</option>
+                    {% for student in students %}
+                        <option value="{{ student.id }}">{{ student.fullName }} ({{ student.email }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn-submit">Valider l'inscription</button>
+        </form>
+    {% else %}
+        <div class="no-students">
+            Aucun étudiant disponible sans classe actuellement.<br>
+            <small>(Demandez à l'administrateur de créer les comptes étudiants d'abord)</small>
+        </div>
+    {% endif %}
+
+    <a href="{{ path('app_coordinator_classe_show', {id: classe.id}) }}" style="display: block; text-align: center; margin-top: 1.5rem; color: #94a3b8; text-decoration: none;">← Annuler</a>
+</div>
+{% endblock %}

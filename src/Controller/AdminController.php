@@ -165,16 +165,25 @@ class AdminController extends AbstractController
         ]);
     }
 
+
     #[Route('/users/create', name: 'app_admin_user_create', methods: ['GET', 'POST'])]
     public function createUser(
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
-        ClasseRepository $classeRepository
+        ClasseRepository $classeRepository,
+        UserRepository $userRepository
     ): Response {
         if ($request->isMethod('POST')) {
+            $email = $request->request->get('email');
+
+            if ($userRepository->findOneBy(['email' => $email])) {
+                $this->addFlash('error', "Cet email est déjà utilisé.");
+                return $this->redirectToRoute('app_admin_user_create');
+            }
+
             $user = new User();
-            $user->setEmail($request->request->get('email'));
+            $user->setEmail($email);
             $user->setFirstname($request->request->get('firstname'));
             $user->setLastname($request->request->get('lastname'));
             $user->setRoles([$request->request->get('role')]);

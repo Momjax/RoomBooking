@@ -52,8 +52,8 @@ class CoordinatorController extends AbstractController
         int $id,
         Request $request,
         ClasseRepository $classeRepository,
-        EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher
+        UserRepository $userRepository,
+        EntityManagerInterface $em
     ): Response {
         $classe = $classeRepository->find($id);
         $user = $this->getUser();
@@ -64,23 +64,29 @@ class CoordinatorController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            $student = new User();
-            $student->setEmail($request->request->get('email'));
-            $student->setFirstname($request->request->get('firstname'));
-            $student->setLastname($request->request->get('lastname'));
-            $student->setRoles(['ROLE_USER']);
-            $student->setPassword($passwordHasher->hashPassword($student, 'etudiant123'));
-            $student->setClasse($classe);
+            $studentId = $request->request->get('student_id');
+            $student = $userRepository->find($studentId);
 
-            $em->persist($student);
-            $em->flush();
+            if ($student) {
+                $student->setClasse($classe);
+                $em->flush();
+                $this->addFlash('success', 'Étudiant "' . $student->getFullName() . '" ajouté à la classe !');
+            }
 
-            $this->addFlash('success', 'Étudiant "' . $student->getFullName() . '" ajouté à la classe !');
             return $this->redirectToRoute('app_coordinator_classe_show', ['id' => $id]);
         }
 
+        // On récupère les élèves qui n'ont pas encore de classe (ou qui n'est pas déjà dans celle-ci)
+        $availableStudents = $userRepository->createQueryBuilder('u')
+            ->where('u.roles LIKE :role')
+            ->andWhere('u.classe IS NULL')
+            ->setParameter('role', '%"ROLE_USER"%')
+            ->getQuery()
+            ->getResult();
+
         return $this->render('coordinator/add_student.html.twig', [
             'classe' => $classe,
+            'students' => $availableStudents
         ]);
     }
 
