@@ -139,6 +139,7 @@
                 <span class="equipement-tag">{{ equip.nomEquipement }}</span>
             {% endfor %}
         </div>
+        <a href="{{ path('app_reservation_new', {id: room.id}) }}" style="display: block; text-align: center; background: linear-gradient(135deg, #6366f1, #38bdf8); color: white; padding: 0.7rem; border-radius: 10px; text-decoration: none; margin-top: 1.2rem; font-weight: 700; font-size: 0.9rem;">🗓️ Réserver</a>
     </div>
     {% else %}
         <div class="no-data">Aucune salle enregistrée.</div>
@@ -153,6 +154,15 @@
             <h4>{{ resa.room.nomSalle }}</h4>
             <p>📆 {{ resa.reservationStart|date('d/m/Y') }} — ⏰ {{ resa.reservationStart|date('H:i') }} à {{ resa.reservationEnd|date('H:i') }}</p>
         </div>
+        {% set status = resa.computedStatus %}
+        <span style="padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            {% if status == 'EN COURS' %}background:rgba(52, 211, 153, 0.15); color:#34d399;
+            {% elseif status == 'TERMINÉ' %}background:rgba(148, 163, 184, 0.1); color:#94a3b8;
+            {% elseif status == 'ANNULÉ' %}background:rgba(239, 68, 68, 0.15); color:#ef4444;
+            {% else %}background:rgba(56, 189, 248, 0.15); color:#38bdf8;{% endif %}"
+        >
+            {{ status }}
+        </span>
     </div>
     {% else %}
         <div class="no-data">Aucune réservation pour le moment.</div>
