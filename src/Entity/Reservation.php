@@ -31,9 +31,43 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private ?Room $room = null;
 
+    #[ORM\Column(length: 20)]
+    private ?string $status = 'VALIDE';
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->status = 'VALIDE';
+    }
+
+    /**
+     * Calcule le statut réel en fonction du temps
+     */
+    public function getComputedStatus(): string
+    {
+        if ($this->status === 'ANNULE') {
+            return 'ANNULÉ';
+        }
+
+        $now = new \DateTime();
+        if ($now < $this->reservationStart) {
+            return 'VALIDÉ';
+        }
+        if ($now > $this->reservationEnd) {
+            return 'TERMINÉ';
+        }
+        return 'EN COURS';
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+        return $this;
     }
 
     public function getId(): ?int

@@ -25,9 +25,11 @@ class ReservationRepository extends ServiceEntityRepository
             ->where('r.room = :roomId')
             ->andWhere('r.reservationStart < :end')
             ->andWhere('r.reservationEnd > :start')
+            ->andWhere('r.status = :status')
             ->setParameter('roomId', $roomId)
             ->setParameter('start', $start)
-            ->setParameter('end', $end);
+            ->setParameter('end', $end)
+            ->setParameter('status', 'VALIDE');
 
         if ($excludeId) {
             $qb->andWhere('r.id != :excludeId')

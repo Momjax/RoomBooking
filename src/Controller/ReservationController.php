@@ -81,10 +81,10 @@ class ReservationController extends AbstractController
             throw $this->createAccessDeniedException('Vous ne pouvez pas annuler cette réservation.');
         }
 
-        $em->remove($reservation);
+        $reservation->setStatus('ANNULE');
         $em->flush();
 
-        $this->addFlash('success', 'Réservation annulée avec succès.');
+        $this->addFlash('success', 'Réservation annulée.');
         return $this->redirectToRoute('app_my_reservations');
     }
 }

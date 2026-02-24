@@ -53,14 +53,16 @@
                 Le {{ res.reservationStart|date('d/m/Y') }} 
                 de {{ res.reservationStart|date('H:i') }} à {{ res.reservationEnd|date('H:i') }}
             </div>
-            {% if res.reservationStart < date() %}
-                <span class="status-tag status-past">Passée</span>
-            {% else %}
-                <span class="status-tag status-active">À venir</span>
-            {% endif %}
+            {% set status = res.computedStatus %}
+            <span class="status-tag 
+                {% if status == 'ANNULÉ' %}status-past{% elseif status == 'TERMINÉ' %}status-past{% elseif status == 'EN COURS' %}status-active{% else %}status-active{% endif %}"
+                style="{% if status == 'EN COURS' %}background:rgba(52, 211, 153, 0.15); color:#34d399;{% elseif status == 'TERMINÉ' %}background:rgba(148, 163, 184, 0.1); color:#64748b;{% elseif status == 'ANNULÉ' %}background:rgba(239, 68, 68, 0.15); color:#ef4444;{% endif %}"
+            >
+                {{ status }}
+            </span>
         </div>
         
-        {% if res.reservationStart > date() %}
+        {% if status == 'VALIDÉ' %}
             <form method="post" action="{{ path('app_reservation_cancel', {id: res.id}) }}" onsubmit="return confirm('Annuler cette réservation ?')">
                 <button class="btn-cancel">Annuler</button>
             </form>
