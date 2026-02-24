@@ -59,9 +59,11 @@
                                 </form>
                             {% endif %}
                             
-                            <form method="post" action="{{ path('app_admin_reservation_delete', {id: res.id}) }}" onsubmit="return confirm('SUPPRIMER DÉFINITIVEMENT de la base de données ? Cette action est irréversible.')">
-                                <button class="btn-action btn-delete">Supprimer (BDD)</button>
-                            </form>
+                            {% if computedStatus == 'ANNULÉ' %}
+                                <form method="post" action="{{ path('app_admin_reservation_delete', {id: res.id}) }}" onsubmit="return confirm('SUPPRIMER DÉFINITIVEMENT de la base de données ? Cette action est irréversible.')">
+                                    <button class="btn-action btn-delete">Supprimer (BDD)</button>
+                                </form>
+                            {% endif %}
                         </div>
                     </td>
                 </tr>
