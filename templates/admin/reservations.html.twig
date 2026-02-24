@@ -39,6 +39,17 @@
                 {% endfor %}
             </select>
         </div>
+        <div style="flex: 1;">
+            <label style="display: block; color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.4rem;">Filtrer par date</label>
+            <input type="date" name="date" value="{{ selectedDate }}" style="width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; padding: 0.5rem;">
+        </div>
+        <div style="flex: 1;">
+            <label style="display: block; color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.4rem;">Ordre chronologique</label>
+            <select name="order" style="width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; padding: 0.5rem;">
+                <option value="DESC" {{ selectedOrder == 'DESC' ? 'selected' : '' }}>Plus récent d'abord</option>
+                <option value="ASC" {{ selectedOrder == 'ASC' ? 'selected' : '' }}>Plus ancien d'abord</option>
+            </select>
+        </div>
         <button type="submit" style="background: #38bdf8; color: #0f172a; border: none; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer;">Filtrer</button>
         <a href="{{ path('app_admin_reservations') }}" style="color: #64748b; text-decoration: none; font-size: 0.85rem; padding-bottom: 0.6rem;">Réinitialiser</a>
     </form>

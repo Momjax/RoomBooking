@@ -361,6 +361,8 @@ class AdminController extends AbstractController
     ): Response {
         $roomId = $request->query->get('room');
         $userId = $request->query->get('user');
+        $dateFilter = $request->query->get('date');
+        $order = $request->query->get('order', 'DESC');
 
         $criteria = [];
         if ($roomId) {
@@ -370,12 +372,37 @@ class AdminController extends AbstractController
             $criteria['utilisateur'] = $userId;
         }
 
+        // Pour la date, on filtre sur le jour même
+        if ($dateFilter) {
+            $startOfDay = new \DateTime($dateFilter . ' 00:00:00');
+            $endOfDay = new \DateTime($dateFilter . ' 23:59:59');
+
+            // On va utiliser le QueryBuilder du repository pour un filtre plus complexe (plage de date)
+            $qb = $resRepo->createQueryBuilder('r')
+                ->where('r.reservationStart >= :start')
+                ->andWhere('r.reservationStart <= :end')
+                ->setParameter('start', $startOfDay)
+                ->setParameter('end', $endOfDay);
+
+            foreach ($criteria as $field => $value) {
+                $qb->andWhere("r.$field = :$field")
+                    ->setParameter($field, $value);
+            }
+
+            $qb->orderBy('r.reservationStart', $order);
+            $reservations = $qb->getQuery()->getResult();
+        } else {
+            $reservations = $resRepo->findBy($criteria, ['reservationStart' => $order]);
+        }
+
         return $this->render('admin/reservations.html.twig', [
-            'reservations' => $resRepo->findBy($criteria, ['reservationStart' => 'DESC']),
+            'reservations' => $reservations,
             'rooms' => $roomRepo->findAll(),
             'users' => $userRepo->findAll(),
             'selectedRoom' => $roomId,
             'selectedUser' => $userId,
+            'selectedDate' => $dateFilter,
+            'selectedOrder' => $order,
         ]);
     }
 
