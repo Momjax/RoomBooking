@@ -36,7 +36,7 @@
             </select>
         </div>
         <div class="form-group" id="classe-group">
-            <label for="classe_id">Classe (uniquement pour les rôles Étudiant)</label>
+            <label for="classe_id">Classe de l'élève (Rôle Étudiant)</label>
             <select id="classe_id" name="classe_id">
                 <option value="">-- Aucune classe --</option>
                 {% for classe in classes %}
@@ -44,6 +44,17 @@
                 {% endfor %}
             </select>
         </div>
+
+        <div class="form-group" id="prof-classes-group">
+            <label for="classes_gerees">Classes gérées (Rôle Professeur)</label>
+            <select id="classes_gerees" name="classes_gerees[]" multiple style="height: 100px;">
+                {% for classe in classes %}
+                    <option value="{{ classe.id }}" {{ classe in user.classesGerees ? 'selected' : '' }}>{{ classe.classeName }}</option>
+                {% endfor %}
+            </select>
+            <p style="font-size: 0.75rem; color: #64748b; margin-top: 5px;">(Maintenir Ctrl pour sélectionner plusieurs classes)</p>
+        </div>
+
         <button type="submit" class="btn-submit">Mettre à jour</button>
         <a href="{{ path('app_admin_users') }}" style="display: block; text-align: center; margin-top: 1.5rem; color: #94a3b8; text-decoration: none;">Annuler</a>
     </form>

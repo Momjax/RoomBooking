@@ -59,8 +59,8 @@
         <div class="row">
             <div class="col">
                 <label>Date du créneau</label>
-                <input type="date" name="start_date" id="start_date" required min="{{ "now"|date("Y-m-d") }}">
-                <input type="hidden" name="end_date" id="end_date">
+                <input type="date" name="start_date" id="start_date" value="{{ "now"|date("Y-m-d") }}" required min="{{ "now"|date("Y-m-d") }}">
+                <input type="hidden" name="end_date" id="end_date" value="{{ "now"|date("Y-m-d") }}">
             </div>
         </div>
 

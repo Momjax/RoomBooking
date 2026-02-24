@@ -32,6 +32,7 @@
                 <td>{% for e in room.equipements %}<span class="equip-tag">{{ e.nomEquipement }}</span>{% endfor %}</td>
                 <td>
                     <a href="{{ path('app_admin_room_show', {id: room.id}) }}" class="btn-view">Voir</a>
+                    <a href="{{ path('app_admin_room_edit', {id: room.id}) }}" class="btn-edit" style="background:#8b5cf6; color:white; padding: 0.4rem 0.8rem; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 600; margin-right: 0.3rem;">Modifier</a>
                     <form method="post" action="{{ path('app_admin_room_delete', {id: room.id}) }}" style="display:inline" onsubmit="return confirm('Supprimer cette salle ?')">
                         <button class="btn-danger">Supprimer</button>
                     </form>
