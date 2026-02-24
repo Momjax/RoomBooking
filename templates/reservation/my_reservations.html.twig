@@ -55,8 +55,8 @@
             </div>
             {% set status = res.computedStatus %}
             <span class="status-tag 
-                {% if status == 'ANNULÉ' %}status-past{% elseif status == 'TERMINÉ' %}status-past{% elseif status == 'EN COURS' %}status-active{% else %}status-active{% endif %}"
-                style="{% if status == 'EN COURS' %}background:rgba(52, 211, 153, 0.15); color:#34d399;{% elseif status == 'TERMINÉ' %}background:rgba(148, 163, 184, 0.1); color:#64748b;{% elseif status == 'ANNULÉ' %}background:rgba(239, 68, 68, 0.15); color:#ef4444;{% endif %}"
+                {% if status == 'ANNULÉ' or status == 'TERMINÉ' %}status-past{% else %}status-active{% endif %}"
+                style="{% if status == 'TERMINÉ' %}background:rgba(148, 163, 184, 0.1); color:#64748b;{% elseif status == 'ANNULÉ' %}background:rgba(239, 68, 68, 0.15); color:#ef4444;{% endif %}"
             >
                 {{ status }}
             </span>

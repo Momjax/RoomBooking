@@ -50,13 +50,11 @@ class Reservation
         }
 
         $now = new \DateTime();
-        if ($now < $this->reservationStart) {
-            return 'VALIDÉ';
-        }
         if ($now > $this->reservationEnd) {
             return 'TERMINÉ';
         }
-        return 'EN COURS';
+
+        return 'VALIDÉ';
     }
 
     public function getStatus(): ?string
