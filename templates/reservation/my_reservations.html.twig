@@ -67,6 +67,12 @@
                 <button class="btn-cancel">Annuler</button>
             </form>
         {% endif %}
+
+        {% if status == 'ANNULÉ' or status == 'TERMINÉ' %}
+            <form method="post" action="{{ path('app_reservation_delete', {id: res.id}) }}" onsubmit="return confirm('Supprimer définitivement de votre historique ?')">
+                <button class="btn-cancel" style="background: #ef4444; border-color: #ef4444; color: white;">Supprimer</button>
+            </form>
+        {% endif %}
     </div>
 {% else %}
     <div style="text-align: center; color: #64748b; padding: 4rem;">
