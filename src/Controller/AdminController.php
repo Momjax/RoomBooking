@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Classe;
 use App\Entity\Equipement;
+use App\Entity\Reservation;
 use App\Entity\Room;
 use App\Entity\User;
 use App\Repository\ClasseRepository;
@@ -292,11 +293,27 @@ class AdminController extends AbstractController
             $user->setLastname($request->request->get('lastname'));
             $user->setRoles([$request->request->get('role')]);
 
+            // Gestion de la classe unique (Élève)
             $classeId = $request->request->get('classe_id');
             if ($classeId) {
                 $user->setClasse($classeRepository->find($classeId));
             } else {
                 $user->setClasse(null);
+            }
+
+            // Gestion des classes gérées (Professeur) - ManyToMany
+            if (in_array('ROLE_PROFESSEUR', $user->getRoles())) {
+                // On vide d'abord
+                foreach ($user->getClassesGerees() as $oldClasse) {
+                    $user->removeClassesGeree($oldClasse);
+                }
+                // On ajoute les nouvelles
+                $managedClassesIds = $request->request->all('classes_gerees') ?? [];
+                foreach ($managedClassesIds as $cid) {
+                    $c = $classeRepository->find($cid);
+                    if ($c)
+                        $user->addClassesGeree($c);
+                }
             }
 
             $em->flush();
@@ -341,5 +358,25 @@ class AdminController extends AbstractController
         return $this->render('admin/reservations.html.twig', [
             'reservations' => $resRepo->findBy([], ['reservationStart' => 'DESC']),
         ]);
+    }
+
+    #[Route('/reservations/{id}/cancel', name: 'app_admin_reservation_cancel', methods: ['POST'])]
+    public function adminCancelReservation(Reservation $reservation, EntityManagerInterface $em): Response
+    {
+        $reservation->setStatus('ANNULE');
+        $em->flush();
+
+        $this->addFlash('success', 'Réservation annulée par l\'administrateur.');
+        return $this->redirectToRoute('app_admin_reservations');
+    }
+
+    #[Route('/reservations/{id}/delete', name: 'app_admin_reservation_delete', methods: ['POST'])]
+    public function adminDeleteReservation(Reservation $reservation, EntityManagerInterface $em): Response
+    {
+        $em->remove($reservation);
+        $em->flush();
+
+        $this->addFlash('success', 'Réservation supprimée définitivement de la base de données.');
+        return $this->redirectToRoute('app_admin_reservations');
     }
 }

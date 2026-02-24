@@ -5,12 +5,20 @@
     .table-container { background: #1e293b; border-radius: 16px; overflow: hidden; border: 1px solid #334155; }
     table { width: 100%; border-collapse: collapse; }
     th { background: #334155; color: #94a3b8; padding: 1rem; text-align: left; font-size: 0.85rem; }
-    td { padding: 1rem; border-bottom: 1px solid #1e293b; color: #e2e8f0; }
-    .btn-cancel { background: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
+    td { padding: 1rem; border-bottom: 1px solid #1e293b; color: #e2e8f0; vertical-align: middle; }
+    .status-badge { padding: 0.3rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+    .btn-action { border: none; padding: 0.5rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 700; transition: opacity 0.2s; text-decoration: none; }
+    .btn-cancel { background: #f59e0b; color: #0f172a; }
+    .btn-delete { background: #ef4444; color: white; }
+    .btn-action:hover { opacity: 0.8; }
 </style>
 {% endblock %}
 {% block body %}
-<h1 style="margin-bottom: 2rem;">🛡️ Toutes les réservations</h1>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>🛡️ Gestion globale des réservations</h1>
+    <span style="color: #64748b; font-size: 0.9rem;">{{ reservations|length }} entrée(s) trouvée(s)</span>
+</div>
+
 <div class="table-container">
     <table>
         <thead>
@@ -18,23 +26,47 @@
                 <th>Salle</th>
                 <th>Utilisateur</th>
                 <th>Date / Heure</th>
+                <th>Statut</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for res in reservations %}
+                {% set computedStatus = res.computedStatus %}
                 <tr>
                     <td><strong>{{ res.room.nomSalle }}</strong></td>
-                    <td>{{ res.utilisateur.fullName }} ({{ res.utilisateur.email }})</td>
-                    <td>Le {{ res.reservationStart|date('d/m/Y') }} à {{ res.reservationStart|date('H:i') }}</td>
+                    <td>{{ res.utilisateur.fullName }}<br><small style="color:#64748b">{{ res.utilisateur.email }}</small></td>
                     <td>
-                        <form method="post" action="{{ path('app_reservation_cancel', {id: res.id}) }}" onsubmit="return confirm('Supprimer cette réservation ?')">
-                            <button class="btn-cancel">Supprimer</button>
-                        </form>
+                        <span style="color: #38bdf8;">{{ res.reservationStart|date('d/m/Y') }}</span><br>
+                        <small>{{ res.reservationStart|date('H:i') }} - {{ res.reservationEnd|date('H:i') }}</small>
+                    </td>
+                    <td>
+                        {% if computedStatus == 'ANNULÉ' %}
+                            <span class="status-badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">ANNULÉ</span>
+                        {% elseif computedStatus == 'TERMINÉ' %}
+                            <span class="status-badge" style="background: rgba(148, 163, 184, 0.1); color: #94a3b8;">TERMINÉ</span>
+                        {% elseif computedStatus == 'EN COURS' %}
+                            <span class="status-badge" style="background: rgba(52, 211, 153, 0.15); color: #34d399;">EN COURS</span>
+                        {% else %}
+                            <span class="status-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">VALIDÉ</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            {% if computedStatus == 'VALIDÉ' or computedStatus == 'EN COURS' %}
+                                <form method="post" action="{{ path('app_admin_reservation_cancel', {id: res.id}) }}" onsubmit="return confirm('Annuler cette réservation ?')">
+                                    <button class="btn-action btn-cancel">Annuler</button>
+                                </form>
+                            {% endif %}
+                            
+                            <form method="post" action="{{ path('app_admin_reservation_delete', {id: res.id}) }}" onsubmit="return confirm('SUPPRIMER DÉFINITIVEMENT de la base de données ? Cette action est irréversible.')">
+                                <button class="btn-action btn-delete">Supprimer (BDD)</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             {% else %}
-                <tr><td colspan="4" style="text-align: center; padding: 2rem; color: #64748b;">Aucune réservation enregistrée.</td></tr>
+                <tr><td colspan="5" style="text-align: center; padding: 3rem; color: #64748b;">Aucune réservation dans le système.</td></tr>
             {% endfor %}
         </tbody>
     </table>
