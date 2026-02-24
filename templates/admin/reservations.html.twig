@@ -14,9 +14,34 @@
 </style>
 {% endblock %}
 {% block body %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
     <h1>🛡️ Gestion globale des réservations</h1>
     <span style="color: #64748b; font-size: 0.9rem;">{{ reservations|length }} entrée(s) trouvée(s)</span>
+</div>
+
+<div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1.2rem; margin-bottom: 2rem;">
+    <form method="get" style="display: flex; gap: 1rem; align-items: flex-end;">
+        <div style="flex: 1;">
+            <label style="display: block; color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.4rem;">Filtrer par salle</label>
+            <select name="room" style="width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; padding: 0.5rem;">
+                <option value="">Toutes les salles</option>
+                {% for room in rooms %}
+                    <option value="{{ room.id }}" {{ selectedRoom == room.id ? 'selected' : '' }}>{{ room.nomSalle }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="flex: 1;">
+            <label style="display: block; color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.4rem;">Filtrer par utilisateur</label>
+            <select name="user" style="width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; padding: 0.5rem;">
+                <option value="">Tous les utilisateurs</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}" {{ selectedUser == user.id ? 'selected' : '' }}>{{ user.fullName }} ({{ user.email }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" style="background: #38bdf8; color: #0f172a; border: none; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer;">Filtrer</button>
+        <a href="{{ path('app_admin_reservations') }}" style="color: #64748b; text-decoration: none; font-size: 0.85rem; padding-bottom: 0.6rem;">Réinitialiser</a>
+    </form>
 </div>
 
 <div class="table-container">

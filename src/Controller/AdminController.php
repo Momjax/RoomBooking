@@ -353,10 +353,29 @@ class AdminController extends AbstractController
     }
 
     #[Route('/reservations', name: 'app_admin_reservations')]
-    public function manageReservations(ReservationRepository $resRepo): Response
-    {
+    public function manageReservations(
+        Request $request,
+        ReservationRepository $resRepo,
+        RoomRepository $roomRepo,
+        UserRepository $userRepo
+    ): Response {
+        $roomId = $request->query->get('room');
+        $userId = $request->query->get('user');
+
+        $criteria = [];
+        if ($roomId) {
+            $criteria['room'] = $roomId;
+        }
+        if ($userId) {
+            $criteria['utilisateur'] = $userId;
+        }
+
         return $this->render('admin/reservations.html.twig', [
-            'reservations' => $resRepo->findBy([], ['reservationStart' => 'DESC']),
+            'reservations' => $resRepo->findBy($criteria, ['reservationStart' => 'DESC']),
+            'rooms' => $roomRepo->findAll(),
+            'users' => $userRepo->findAll(),
+            'selectedRoom' => $roomId,
+            'selectedUser' => $userId,
         ]);
     }
 
