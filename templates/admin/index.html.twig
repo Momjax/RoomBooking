@@ -49,12 +49,16 @@
         <div class="stat-value">{{ totalClasses }}</div>
         <div class="stat-label">🎓 Classes</div>
     </a>
+    <a href="{{ path('app_admin_reservations') }}" class="stat-card" style="background: linear-gradient(135deg, #4b5563, #1f2937);">
+        <div class="stat-value" style="color: #f472b6;">⚡</div>
+        <div class="stat-label">🛡️ Réservations</div>
+    </a>
 </div>
 
 <div class="admin-links">
     <a href="{{ path('app_admin_rooms') }}" class="admin-link">
         <h3>🏢 Gérer les salles</h3>
-        <p>Créer, voir et supprimer des salles avec leurs équipements</p>
+        <p>Créer, voir et modifier les salles avec leurs équipements</p>
     </a>
     <a href="{{ path('app_admin_classes') }}" class="admin-link">
         <h3>🎓 Gérer les classes</h3>
@@ -62,7 +66,11 @@
     </a>
     <a href="{{ path('app_admin_users') }}" class="admin-link">
         <h3>👥 Gérer les utilisateurs</h3>
-        <p>Créer des étudiants, coordinateurs, réinitialiser les mots de passe</p>
+        <p>Gérer les comptes, rôles et réinitialiser les mots de passe</p>
+    </a>
+    <a href="{{ path('app_admin_reservations') }}" class="admin-link">
+        <h3>🛡️ Gérer les réservations</h3>
+        <p>Voir tout le planning et annuler des créneaux si besoin</p>
     </a>
 </div>
 {% endblock %}

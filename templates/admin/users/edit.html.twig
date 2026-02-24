@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modifier l'utilisateur - Admin{% endblock %}
+{% block stylesheets %}
+<style>
+    .form-card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2rem; max-width: 600px; margin: 0 auto; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; color: #cbd5e1; }
+    .form-group input, .form-group select { width: 100%; padding: 0.7rem; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: #e2e8f0; outline: none; }
+    .btn-submit { background: linear-gradient(135deg, #38bdf8, #818cf8); color: #0f172a; border: none; padding: 0.8rem 2rem; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 1rem; }
+</style>
+{% endblock %}
+{% block body %}
+<div class="form-card">
+    <h1>👤 Modifier l'utilisateur : {{ user.fullName }}</h1>
+    <form method="post">
+        <div class="form-group" style="display: flex; gap: 1rem;">
+            <div style="flex: 1;">
+                <label for="firstname">Prénom</label>
+                <input type="text" id="firstname" name="firstname" value="{{ user.firstname }}" required>
+            </div>
+            <div style="flex: 1;">
+                <label for="lastname">Nom</label>
+                <input type="text" id="lastname" name="lastname" value="{{ user.lastname }}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+        </div>
+        <div class="form-group">
+            <label for="role">Rôle</label>
+            <select id="role" name="role" required>
+                <option value="ROLE_USER" {{ 'ROLE_ADMIN' not in user.roles and 'ROLE_PROFESSEUR' not in user.roles ? 'selected' : '' }}>Étudiant</option>
+                <option value="ROLE_PROFESSEUR" {{ 'ROLE_PROFESSEUR' in user.roles ? 'selected' : '' }}>Professeur / Coordinateur</option>
+                <option value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in user.roles ? 'selected' : '' }}>Administrateur</option>
+            </select>
+        </div>
+        <div class="form-group" id="classe-group">
+            <label for="classe_id">Classe (uniquement pour les rôles Étudiant)</label>
+            <select id="classe_id" name="classe_id">
+                <option value="">-- Aucune classe --</option>
+                {% for classe in classes %}
+                    <option value="{{ classe.id }}" {{ user.classe and user.classe.id == classe.id ? 'selected' : '' }}>{{ classe.classeName }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn-submit">Mettre à jour</button>
+        <a href="{{ path('app_admin_users') }}" style="display: block; text-align: center; margin-top: 1.5rem; color: #94a3b8; text-decoration: none;">Annuler</a>
+    </form>
+</div>
+{% endblock %}

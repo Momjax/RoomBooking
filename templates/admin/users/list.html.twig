@@ -41,6 +41,7 @@
                     {% else %}-{% endif %}
                 </td>
                 <td>
+                    <a href="{{ path('app_admin_user_edit', {id: user.id}) }}" class="btn-action" style="background:#8b5cf6; color:white;">Modifier</a>
                     <form method="post" action="{{ path('app_admin_user_reset_password', {id: user.id}) }}" style="display:inline" onsubmit="return confirm('Réinitialiser le mot de passe de cet utilisateur ?')">
                         <button class="btn-action btn-reset">Reset MDP</button>
                     </form>
