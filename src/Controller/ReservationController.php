@@ -87,22 +87,4 @@ class ReservationController extends AbstractController
         $this->addFlash('success', 'Réservation annulée.');
         return $this->redirectToRoute('app_my_reservations');
     }
-
-    #[Route('/{id}/delete', name: 'app_reservation_delete', methods: ['POST'])]
-    public function delete(Reservation $reservation, EntityManagerInterface $em): Response
-    {
-        // Sécurité : Uniquement ses propres réservations
-        if ($reservation->getUtilisateur() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer cette réservation.');
-        }
-
-        // Sécurité : Doit être déjà annulée ou terminée pour être supprimée par l'user ? 
-        // Ou on laisse supprimer n'importe quoi de son propre historique ? 
-        // On va dire qu'il peut supprimer n'importe laquelle de SON historique.
-        $em->remove($reservation);
-        $em->flush();
-
-        $this->addFlash('success', 'Réservation supprimée définitivement de votre historique.');
-        return $this->redirectToRoute('app_my_reservations');
-    }
 }

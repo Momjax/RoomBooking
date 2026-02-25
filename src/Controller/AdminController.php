@@ -415,19 +415,4 @@ class AdminController extends AbstractController
         $this->addFlash('success', 'Réservation annulée par l\'administrateur.');
         return $this->redirectToRoute('app_admin_reservations');
     }
-
-    #[Route('/reservations/{id}/delete', name: 'app_admin_reservation_delete', methods: ['POST'])]
-    public function adminDeleteReservation(Reservation $reservation, EntityManagerInterface $em): Response
-    {
-        if ($reservation->getStatus() !== 'ANNULE') {
-            $this->addFlash('error', 'Vous devez d\'abord annuler la réservation avant de la supprimer définitivement.');
-            return $this->redirectToRoute('app_admin_reservations');
-        }
-
-        $em->remove($reservation);
-        $em->flush();
-
-        $this->addFlash('success', 'Réservation supprimée définitivement de la base de données.');
-        return $this->redirectToRoute('app_admin_reservations');
-    }
 }
