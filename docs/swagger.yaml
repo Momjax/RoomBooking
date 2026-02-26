@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: RoomBooking API Documentation
+  description: Documentation des routes de l'application de réservation de salles pour le projet de BTS SIO MediaSchool IRIS Nice.
+  version: 1.0.0
+servers:
+  - url: https://roombooking.mediaschool.local
+    description: Serveur de production
+  - url: http://localhost:8000
+    description: Serveur de développement local
+paths:
+  /login:
+    post:
+      summary: Authentification utilisateur
+      description: Connecte un utilisateur (Admin, Professeur ou Étudiant)
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _username:
+                  type: string
+                  example: admin@mediaschool.me
+                _password:
+                  type: string
+                  example: admin123
+      responses:
+        '302':
+          description: Redirection vers le tableau de bord
+        '401':
+          description: Identifiants invalides
+  /reservation/new/{id}:
+    post:
+      summary: Réserver une salle
+      description: Crée une nouvelle réservation pour une salle donnée
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la salle
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                start_date:
+                  type: string
+                  format: date
+                start_time:
+                  type: string
+                  example: "09:00"
+                end_date:
+                  type: string
+                  format: date
+                end_time:
+                  type: string
+                  example: "12:00"
+      responses:
+        '302':
+          description: Redirection vers le dashboard après succès ou erreur
+  /reservation/{id}/cancel:
+    post:
+      summary: Annuler une réservation
+      description: Change le statut d'une réservation en 'ANNULE'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la réservation
+      responses:
+        '302':
+          description: Redirection vers la liste des réservations
+  /api/rooms:
+    get:
+      summary: Liste des salles (Exemple API)
+      description: Dans le cas d'une future évolution en API pure pour React/Vue.js
+      responses:
+        '200':
+          description: Un objet contenant les salles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Room'
+
+components:
+  schemas:
+    Room:
+      type: object
+      properties:
+        id:
+          type: integer
+        nomSalle:
+          type: string
+        capacite:
+          type: integer
+        description:
+          type: string
+    Reservation:
+      type: object
+      properties:
+        id:
+          type: integer
+        reservationStart:
+          type: string
+          format: date-time
+        reservationEnd:
+          type: string
+          format: date-time
+        status:
+          type: string
+        room:
+          $ref: '#/components/schemas/Room'

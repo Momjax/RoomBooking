@@ -25,3 +25,8 @@ Thumbs.db
 
 # Composer
 composer.phar
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
