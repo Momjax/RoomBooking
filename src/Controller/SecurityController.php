@@ -30,6 +30,12 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    #[Route('/check-drivers', name: 'app_check_drivers')]
+    public function checkDrivers(): Response
+    {
+        return new Response('Drivers: ' . implode(', ', \PDO::getAvailableDrivers()));
+    }
+
     #[Route('/logout', name: 'app_logout')]
     public function logout(): void
     {
@@ -38,8 +44,12 @@ class SecurityController extends AbstractController
 
     #[Route('/profile', name: 'app_profile', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function profile(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
-    {
+    public function profile(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $em,
+        \App\Repository\ReservationRepository $resRepo
+    ): Response {
         $user = $this->getUser();
         if ($request->isMethod('POST')) {
             $newPass = $request->request->get('password');
@@ -50,6 +60,8 @@ class SecurityController extends AbstractController
                 $this->addFlash('success', 'Votre mot de passe a été mis à jour.');
             }
         }
-        return $this->render('security/profile.html.twig');
+        return $this->render('security/profile.html.twig', [
+            'reservations' => $resRepo->findBy(['utilisateur' => $user], ['reservationStart' => 'DESC'])
+        ]);
     }
 }

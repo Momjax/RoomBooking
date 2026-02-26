@@ -59,19 +59,19 @@
         <div class="row">
             <div class="col">
                 <label>Date du créneau</label>
-                <input type="date" name="start_date" id="start_date" value="{{ "now"|date("Y-m-d") }}" required min="{{ "now"|date("Y-m-d") }}">
-                <input type="hidden" name="end_date" id="end_date" value="{{ "now"|date("Y-m-d") }}">
+                <input type="date" name="start_date" id="start_date" value="{{ prefilledDate ?? "now"|date("Y-m-d") }}" required min="{{ "now"|date("Y-m-d") }}">
+                <input type="hidden" name="end_date" id="end_date" value="{{ prefilledDate ?? "now"|date("Y-m-d") }}">
             </div>
         </div>
 
         <div class="row">
             <div class="col">
                 <label>Heure de début</label>
-                <input type="time" name="start_time" required>
+                <input type="time" name="start_time" value="{{ prefilledHour ? prefilledHour ~ ':00' : '' }}" required>
             </div>
             <div class="col">
                 <label>Heure de fin</label>
-                <input type="time" name="end_time" required>
+                <input type="time" name="end_time" value="{{ prefilledHour ? (prefilledHour + 1) ~ ':00' : '' }}" required>
             </div>
         </div>
 

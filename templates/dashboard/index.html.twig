@@ -4,167 +4,219 @@
 
 {% block stylesheets %}
 <style>
-    .dashboard-header {
-        margin-bottom: 2rem;
+    .welcome-section {
+        margin-bottom: 3rem;
     }
-    .dashboard-header h1 {
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin-bottom: 0.3rem;
+    .welcome-section h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(to right, white, #94a3b8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
-    .dashboard-header p { color: #94a3b8; }
-    .stats {
+    .welcome-section p { color: var(--text-dim); font-size: 1.1rem; }
+
+    .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
     }
     .stat-card {
-        background: linear-gradient(135deg, #1e293b, #334155);
-        border: 1px solid #475569;
-        border-radius: 16px;
         padding: 1.5rem;
-        text-align: center;
-        transition: transform 0.2s;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
-    .stat-card:hover { transform: translateY(-3px); }
-    .stat-card .stat-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #38bdf8;
-    }
-    .stat-card .stat-label {
-        color: #94a3b8;
-        font-size: 0.9rem;
-        margin-top: 0.3rem;
-    }
-    .section-title {
-        font-size: 1.3rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: #f472b6;
-    }
-    .rooms-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-    .room-card {
-        background: #1e293b;
-        border: 1px solid #334155;
-        border-radius: 16px;
-        padding: 1.5rem;
-        transition: border-color 0.2s, transform 0.2s;
-    }
-    .room-card:hover {
-        border-color: #6366f1;
-        transform: translateY(-2px);
-    }
-    .room-card h3 {
-        color: #e2e8f0;
-        font-size: 1.1rem;
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
         margin-bottom: 0.5rem;
     }
-    .room-card .room-info {
-        color: #94a3b8;
-        font-size: 0.85rem;
-        margin-bottom: 0.3rem;
+    .stat-value {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: white;
     }
-    .room-card .equipements {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        margin-top: 0.8rem;
+    .stat-label {
+        color: var(--text-dim);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
-    .room-card .equipement-tag {
-        background: rgba(99, 102, 241, 0.15);
-        color: #a5b4fc;
-        padding: 0.2rem 0.6rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
     }
-    .reservations-list { margin-bottom: 2rem; }
-    .reservation-item {
-        background: #1e293b;
-        border: 1px solid #334155;
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        margin-bottom: 0.8rem;
+
+    .section {
+        background: var(--bg-card);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 1.5rem;
+    }
+
+    .section-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        transition: border-color 0.2s;
+        margin-bottom: 1.5rem;
     }
-    .reservation-item:hover { border-color: #6366f1; }
-    .reservation-info h4 { color: #e2e8f0; margin-bottom: 0.3rem; }
-    .reservation-info p { color: #94a3b8; font-size: 0.85rem; }
-    .no-data {
-        text-align: center;
-        color: #64748b;
-        padding: 2rem;
-        font-style: italic;
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .room-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: block;
+    }
+
+    .room-card:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .room-name { font-weight: 700; color: white; margin-bottom: 0.25rem; font-size: 1.1rem; }
+    .room-desc { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.75rem; }
+
+    .tag-container { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag {
+        background: rgba(56, 189, 248, 0.1);
+        color: var(--primary);
+        padding: 0.2rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .reservation-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        transition: all 0.2s;
+    }
+
+    .resa-room { font-weight: 700; color: white; font-size: 0.95rem; }
+    .resa-time { color: var(--text-dim); font-size: 0.8rem; }
+
+    .status-badge {
+        font-size: 0.65rem;
+        font-weight: 800;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        align-self: flex-start;
+        text-transform: uppercase;
+    }
+
+    @media (max-width: 1024px) {
+        .dashboard-grid { grid-template-columns: 1fr; }
     }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="dashboard-header">
-    <h1>👋 Bienvenue, {{ app.user.firstname }} !</h1>
-    <p>Voici un aperçu de vos espaces et réservations.</p>
+<div class="welcome-section">
+    <h1>Salut, {{ app.user.firstname }} !</h1>
+    <p>Gérez vos réservations et trouvez votre espace idéal.</p>
 </div>
 
-<div class="stats">
-    <div class="stat-card">
+<div class="stats-grid">
+    <div class="glass-card stat-card">
+        <div class="stat-icon">🏢</div>
         <div class="stat-value">{{ rooms|length }}</div>
-        <div class="stat-label">🏢 Salles disponibles</div>
+        <div class="stat-label">Salles</div>
     </div>
-    <div class="stat-card">
+    <div class="glass-card stat-card">
+        <div class="stat-icon">📅</div>
         <div class="stat-value">{{ reservations|length }}</div>
-        <div class="stat-label">📅 Mes réservations</div>
+        <div class="stat-label">Vos réservations</div>
+    </div>
+    <div class="glass-card stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-value">{{ "now"|date('H:i') }}</div>
+        <div class="stat-label">Heure actuelle</div>
     </div>
 </div>
 
-<h2 class="section-title">🏢 Salles</h2>
-<div class="rooms-grid">
-    {% for room in rooms %}
-    <div class="room-card">
-        <h3>{{ room.nomSalle }}</h3>
-        <div class="room-info">👥 Capacité : {{ room.capacite }} places</div>
-        {% if room.description %}
-            <div class="room-info">{{ room.description }}</div>
-        {% endif %}
-        <div class="equipements">
-            {% for equip in room.equipements %}
-                <span class="equipement-tag">{{ equip.nomEquipement }}</span>
+<div class="dashboard-grid">
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">Salles disponibles</h2>
+            <a href="{{ path('app_reservation_calendar') }}" class="btn-gradient" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Réserver maintenant</a>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+            {% for room in rooms %}
+                <a href="{{ path('app_reservation_new', {id: room.id}) }}" class="room-card">
+                    <div class="room-name">{{ room.nomSalle }}</div>
+                    <div class="room-desc">Capacité: {{ room.capacite }} personnes</div>
+                    <div class="tag-container">
+                        {% for equip in room.equipements %}
+                            <span class="tag">{{ equip.nomEquipement }}</span>
+                        {% endfor %}
+                    </div>
+                </a>
             {% endfor %}
         </div>
-        <a href="{{ path('app_reservation_new', {id: room.id}) }}" style="display: block; text-align: center; background: linear-gradient(135deg, #6366f1, #38bdf8); color: white; padding: 0.7rem; border-radius: 10px; text-decoration: none; margin-top: 1.2rem; font-weight: 700; font-size: 0.9rem;">🗓️ Réserver</a>
     </div>
-    {% else %}
-        <div class="no-data">Aucune salle enregistrée.</div>
-    {% endfor %}
-</div>
 
-<h2 class="section-title">📅 Mes réservations</h2>
-<div class="reservations-list">
-    {% for resa in reservations %}
-    <div class="reservation-item">
-        <div class="reservation-info">
-            <h4>{{ resa.room.nomSalle }}</h4>
-            <p>📆 {{ resa.reservationStart|date('d/m/Y') }} — ⏰ {{ resa.reservationStart|date('H:i') }} à {{ resa.reservationEnd|date('H:i') }}</p>
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">Mes Réservations</h2>
         </div>
-        {% set status = resa.computedStatus %}
-        <span style="padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
-            {% if status == 'TERMINÉ' %}background:rgba(148, 163, 184, 0.1); color:#94a3b8;
-            {% elseif status == 'ANNULÉ' %}background:rgba(239, 68, 68, 0.15); color:#ef4444;
-            {% else %}background:rgba(56, 189, 248, 0.15); color:#38bdf8;{% endif %}"
-        >
-            {{ status }}
-        </span>
+        
+        {% for resa in reservations|slice(0, 5) %}
+            <div class="reservation-card">
+                <div class="resa-room">{{ resa.room.nomSalle }}</div>
+                <div class="resa-time">
+                    {{ resa.reservationStart|date('d M Y') }}<br>
+                    {{ resa.reservationStart|date('H:i') }} - {{ resa.reservationEnd|date('H:i') }}
+                </div>
+                {% set status = resa.computedStatus %}
+                <span class="status-badge" style="
+                    {% if status == 'TERMINÉ' %}background:rgba(148, 163, 184, 0.1); color:#94a3b8;
+                    {% elseif status == 'ANNULÉ' %}background:rgba(239, 68, 68, 0.15); color:#ef4444;
+                    {% else %}background:rgba(56, 189, 248, 0.2); color:#38bdf8;{% endif %}
+                ">
+                    {{ status }}
+                </span>
+            </div>
+        {% else %}
+            <div style="text-align: center; color: var(--text-dim); padding: 2rem;">
+                Aucune réservation prévue.
+            </div>
+        {% endfor %}
+        
+        {% if reservations|length > 5 %}
+            <a href="{{ path('app_my_reservations') }}" style="display: block; text-align: center; color: var(--primary); font-size: 0.85rem; font-weight: 700; text-decoration: none; margin-top: 1rem;">Voir tout →</a>
+        {% endif %}
     </div>
-    {% else %}
-        <div class="no-data">Aucune réservation pour le moment.</div>
-    {% endfor %}
 </div>
 {% endblock %}

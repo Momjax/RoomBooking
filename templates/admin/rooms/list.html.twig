@@ -18,28 +18,46 @@
 {% endblock %}
 {% block body %}
 <div class="page-header">
-    <h1>🏢 Gestion des salles</h1>
-    <a href="{{ path('app_admin_room_create') }}" class="btn-create">+ Créer une salle</a>
+    <h1>Liste des rooms</h1>
 </div>
-<div class="table-container">
+
+<div class="table-container" style="position: relative;">
     <table>
-        <thead><tr><th>Nom</th><th>Capacité</th><th>Équipements</th><th>Actions</th></tr></thead>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Capacité</th>
+                <th>Equipements</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
         <tbody>
         {% for room in rooms %}
             <tr>
+                <td>{{ room.id }}</td>
                 <td><strong>{{ room.nomSalle }}</strong></td>
-                <td>{{ room.capacite }} places</td>
-                <td>{% for e in room.equipements %}<span class="equip-tag">{{ e.nomEquipement }}</span>{% endfor %}</td>
+                <td>{{ room.capacite }}</td>
                 <td>
-                    <a href="{{ path('app_admin_room_show', {id: room.id}) }}" class="btn-view">Voir</a>
-                    <a href="{{ path('app_admin_room_edit', {id: room.id}) }}" class="btn-edit" style="background:#8b5cf6; color:white; padding: 0.4rem 0.8rem; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 600; margin-right: 0.3rem;">Modifier</a>
-                    <form method="post" action="{{ path('app_admin_room_delete', {id: room.id}) }}" style="display:inline" onsubmit="return confirm('Supprimer cette salle ?')">
-                        <button class="btn-danger">Supprimer</button>
-                    </form>
+                    {% for e in room.equipements %}
+                        <div style="border: 1px solid #334155; padding: 0.2rem 0.5rem; margin-bottom: 0.2rem; border-radius: 4px; font-size: 0.8rem;">
+                            {{ e.nomEquipement }}
+                        </div>
+                    {% endfor %}
+                </td>
+                <td>
+                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                        <form method="post" action="{{ path('app_admin_room_delete', {id: room.id}) }}" onsubmit="return confirm('Supprimer cette salle ?')">
+                            <button class="btn-danger" style="width: 100%;">Supprimer</button>
+                        </form>
+                        <a href="{{ path('app_admin_room_show', {id: room.id}) }}" class="btn-view" style="width: 100%; text-align: center;">Voir</a>
+                    </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    
+    <a href="{{ path('app_admin_room_create') }}" class="fab" style="position: fixed; bottom: 2rem; right: 2rem; background: #334155; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 2px solid #475569;">+</a>
 </div>
 {% endblock %}

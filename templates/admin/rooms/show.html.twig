@@ -13,18 +13,48 @@
 </style>
 {% endblock %}
 {% block body %}
-<div class="room-detail">
-    <h1>🏢 {{ room.nomSalle }}</h1>
-    <div class="info-row"><span class="info-label">Capacité</span><span class="info-value">{{ room.capacite }} places</span></div>
-    <div class="info-row"><span class="info-label">Description</span><span class="info-value">{{ room.description ?? 'Aucune' }}</span></div>
-    <div class="equip-list">
-        <strong>Équipements :</strong><br><br>
+<h1 style="margin-bottom: 2rem;">{{ room.nomSalle }}</h1>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+    <!-- Carte Capacité -->
+    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem;">Capacité</div>
+        <div style="font-size: 1.5rem; font-weight: 700;">{{ room.capacite }} élèves</div>
+    </div>
+    
+    <!-- Carte Equipements -->
+    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1.5rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div style="font-weight: 700;">Equipements ({{ room.equipements|length }})</div>
+            <a href="{{ path('app_admin_room_edit', {id: room.id}) }}" style="background: #334155; color: white; width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; text-decoration: none;">+</a>
+        </div>
         {% for e in room.equipements %}
-            <span class="equip-tag">{{ e.nomEquipement }}</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #334155;">
+                <span style="font-size: 0.9rem;">{{ e.nomEquipement }}</span>
+                <span style="cursor: pointer;">🗑️</span>
+            </div>
         {% else %}
-            <em style="color:#64748b">Aucun équipement</em>
+            <div style="color: #64748b; font-size: 0.85rem;">Aucun équipement</div>
         {% endfor %}
     </div>
-    <a href="{{ path('app_admin_rooms') }}" class="btn-back">← Retour aux salles</a>
 </div>
+
+<!-- Carte Réservations -->
+<div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1.5rem;">
+    <div style="font-weight: 700; margin-bottom: 1rem;">Réservations</div>
+    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #334155; border-radius: 8px;">
+        {% for res in reservations %}
+            <div style="padding: 0.8rem; border-bottom: 1px solid #334155;">
+                <div style="font-weight: 600; font-size: 0.9rem;">{{ res.utilisateur.fullName }}</div>
+                <div style="color: #94a3b8; font-size: 0.8rem;">
+                    {{ res.reservationStart|date('d/m/Y') }} | {{ res.reservationStart|date('H:i') }} - {{ res.reservationEnd|date('H:i') }}
+                </div>
+            </div>
+        {% else %}
+            <div style="padding: 1rem; color: #64748b; text-align: center;">Aucune réservation prévue</div>
+        {% endfor %}
+    </div>
+</div>
+
+<a href="{{ path('app_admin_rooms') }}" class="btn-back" style="display: block; margin-top: 2rem; color: #94a3b8; text-decoration: none;">← Retour aux salles</a>
 {% endblock %}

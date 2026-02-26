@@ -18,47 +18,26 @@
 
 {% block body %}
 <div class="page-header">
-    <div>
-        <h1>🎓 Détail de la Classe</h1>
-        <p style="color: #94a3b8;">Gestion des effectifs de la promotion</p>
+    <h1>{{ classe.classeName }}</h1>
+</div>
+
+<div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1.5rem; position: relative; margin-bottom: 5rem;">
+    <div style="font-weight: 700; margin-bottom: 1rem; border-bottom: 1px solid #334155; padding-bottom: 0.5rem;">
+        Elèves ({{ classe.etudiants|length }})
     </div>
-    <a href="{{ path('app_admin_classes') }}" style="color: #94a3b8; text-decoration: none;">← Retour à la liste</a>
+    
+    {% for student in classe.etudiants %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid #334155;">
+            <div style="font-size: 0.95rem;">{{ student.fullName }}</div>
+            <form method="post" action="{{ path('app_admin_user_delete', {id: student.id}) }}" onsubmit="return confirm('Supprimer cet élève ?')">
+                <button style="background: none; border: none; cursor: pointer; color: #ef4444; font-size: 1.1rem;">🗑️</button>
+            </form>
+        </div>
+    {% else %}
+        <div style="padding: 2rem; text-align: center; color: #64748b;">Aucun élève dans cette classe</div>
+    {% endfor %}
 </div>
 
-<div class="classe-info">
-    <h2>{{ classe.classeName }}</h2>
-    <p>Nombre d'étudiants : <strong>{{ classe.etudiants|length }}</strong></p>
-</div>
-
-<h3 style="margin-bottom: 1rem;">👥 Liste des étudiants</h3>
-<div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for student in classe.etudiants %}
-                <tr>
-                    <td>{{ student.firstname }}</td>
-                    <td>{{ student.lastname }}</td>
-                    <td>{{ student.email }}</td>
-                    <td>
-                        <a href="{{ path('app_admin_user_edit', {id: student.id}) }}" class="btn-action">Modifier l'élève</a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4" style="text-align: center; padding: 2.5rem; color: #64748b;">
-                        Aucun étudiant n'est encore inscrit dans cette classe.
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<a href="{{ path('app_admin_user_create', {classe_id: classe.id}) }}" class="fab" style="position: fixed; bottom: 2rem; right: 2rem; background: #334155; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 2px solid #475569;">+</a>
+<a href="{{ path('app_admin_classes') }}" style="display: block; color: #94a3b8; text-decoration: none;">← Retour aux classes</a>
 {% endblock %}

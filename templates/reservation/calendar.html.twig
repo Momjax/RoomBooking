@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendrier des Réservations{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .page-header { margin-bottom: 3rem; }
+    .page-header h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        background: linear-gradient(to right, white, var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+    .page-header p { color: var(--text-dim); font-size: 1.2rem; }
+
+    .calendar-container {
+        background: var(--bg-card);
+        border: 1px solid var(--glass-border);
+        border-radius: 32px;
+        padding: 2.5rem;
+        box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1rem;
+    }
+
+    .day-label {
+        text-align: center;
+        font-weight: 800;
+        color: var(--text-dim);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding-bottom: 1.5rem;
+    }
+
+    .calendar-day {
+        aspect-ratio: 1;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 1rem;
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .calendar-day:hover {
+        background: rgba(56, 189, 248, 0.08);
+        border-color: var(--primary);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 20px 40px -10px rgba(56, 189, 248, 0.2);
+    }
+
+    .calendar-day.today {
+        background: rgba(56, 189, 248, 0.1);
+        border-color: var(--primary);
+        border-width: 2px;
+    }
+
+    .day-number {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: white;
+    }
+
+    .today-tag {
+        background: var(--primary);
+        color: var(--bg-deep);
+        font-size: 0.6rem;
+        font-weight: 900;
+        padding: 2px 6px;
+        border-radius: 6px;
+        align-self: flex-start;
+    }
+
+    .empty-day {
+        aspect-ratio: 1;
+        background: transparent;
+    }
+
+    @media (max-width: 768px) {
+        .calendar-grid { gap: 0.5rem; }
+        .day-number { font-size: 1rem; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Réserver une salle</h1>
+    <p>Sélectionnez une date pour voir les disponibilités</p>
+</div>
+
+<div class="calendar-container">
+    <div class="calendar-grid">
+        {% set days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'] %}
+        {% for day in days %}
+            <div class="day-label">{{ day }}</div>
+        {% endfor %}
+
+        {% set startOfMonth = now|date('Y-m-01') %}
+        {% set daysInMonth = now|date('t') %}
+        {% set startDayOfWeek = startOfMonth|date('N') %}
+
+        {% for i in 1..(startDayOfWeek - 1) %}
+            <div class="empty-day"></div>
+        {% endfor %}
+
+        {% for day in 1..daysInMonth %}
+            {% set current_date = now|date('Y-m-') ~ (day < 10 ? '0' ~ day : day) %}
+            {% set isToday = current_date == "now"|date('Y-m-d') %}
+            
+            <a href="{{ path('app_reservation_choose_room', {date: current_date}) }}" 
+               class="calendar-day {{ isToday ? 'today' : '' }}">
+                <span class="day-number">{{ day }}</span>
+                {% if isToday %}
+                    <span class="today-tag">AUJOURD'HUI</span>
+                {% endif %}
+            </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

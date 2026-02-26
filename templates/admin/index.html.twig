@@ -4,73 +4,117 @@
 
 {% block stylesheets %}
 <style>
-    .admin-header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .admin-header p { color: #94a3b8; margin-bottom: 2rem; }
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .stat-card {
-        background: linear-gradient(135deg, #1e293b, #334155);
-        border: 1px solid #475569; border-radius: 16px; padding: 1.5rem;
-        text-align: center; transition: transform 0.2s; cursor: pointer; text-decoration: none;
+    .page-header { margin-bottom: 3rem; }
+    .page-header h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        background: linear-gradient(to right, white, var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
     }
-    .stat-card:hover { transform: translateY(-3px); }
-    .stat-card .stat-value { font-size: 2.5rem; font-weight: 800; }
-    .stat-card .stat-label { color: #94a3b8; font-size: 0.9rem; margin-top: 0.3rem; }
-    .stat-card.rooms .stat-value { color: #38bdf8; }
-    .stat-card.users .stat-value { color: #a78bfa; }
-    .stat-card.classes .stat-value { color: #34d399; }
-    .admin-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
-    .admin-link {
-        background: #1e293b; border: 1px solid #334155; border-radius: 16px;
-        padding: 1.5rem; text-decoration: none; color: #e2e8f0;
-        transition: border-color 0.2s, transform 0.2s; display: block;
+    .page-header p { color: var(--text-dim); font-size: 1.2rem; }
+
+    .admin-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
     }
-    .admin-link:hover { border-color: #6366f1; transform: translateY(-2px); }
-    .admin-link h3 { margin-bottom: 0.5rem; }
-    .admin-link p { color: #94a3b8; font-size: 0.85rem; }
+
+    .admin-stat-card {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .admin-stat-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-5px);
+    }
+
+    .stat-numb { font-size: 3rem; font-weight: 800; color: white; line-height: 1; }
+    .stat-text { color: var(--text-dim); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; margin-top: 0.5rem; }
+
+    .admin-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .action-card {
+        background: var(--bg-card);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 2rem;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .action-card:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--primary);
+        transform: scale(1.02);
+    }
+
+    .action-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .action-title { font-weight: 800; font-size: 1.25rem; color: white; }
+    .action-desc { color: var(--text-dim); font-size: 0.9rem; line-height: 1.5; }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="admin-header">
-    <h1>⚙️ Administration</h1>
-    <p>Gestion globale de l'application RoomBooking</p>
+<div class="page-header">
+    <h1>Administration</h1>
+    <p>Gestion globale de la plateforme de réservation</p>
 </div>
 
-<div class="stats">
-    <a href="{{ path('app_admin_rooms') }}" class="stat-card rooms">
-        <div class="stat-value">{{ totalRooms }}</div>
-        <div class="stat-label">🏢 Salles</div>
+<div class="admin-stats">
+    <a href="{{ path('app_admin_classes') }}" class="glass-card admin-stat-card">
+        <span class="stat-numb">{{ totalClasses }}</span>
+        <span class="stat-text">Classes</span>
     </a>
-    <a href="{{ path('app_admin_users') }}" class="stat-card users">
-        <div class="stat-value">{{ totalUsers }}</div>
-        <div class="stat-label">👥 Utilisateurs</div>
+    <a href="{{ path('app_admin_users', {type: 'student'}) }}" class="glass-card admin-stat-card">
+        <span class="stat-numb">{{ totalStudents }}</span>
+        <span class="stat-text">Élèves</span>
     </a>
-    <a href="{{ path('app_admin_classes') }}" class="stat-card classes">
-        <div class="stat-value">{{ totalClasses }}</div>
-        <div class="stat-label">🎓 Classes</div>
+    <a href="{{ path('app_admin_users', {type: 'coordinator'}) }}" class="glass-card admin-stat-card">
+        <span class="stat-numb">{{ totalCoordinators }}</span>
+        <span class="stat-text">Coordinateurs</span>
     </a>
-    <a href="{{ path('app_admin_reservations') }}" class="stat-card" style="background: linear-gradient(135deg, #4b5563, #1f2937);">
-        <div class="stat-value" style="color: #f472b6;">⚡</div>
-        <div class="stat-label">🛡️ Réservations</div>
+    <a href="{{ path('app_admin_reservations') }}" class="glass-card admin-stat-card">
+        <span class="stat-numb">{{ totalReservations }}</span>
+        <span class="stat-text">Réservations</span>
     </a>
 </div>
 
-<div class="admin-links">
-    <a href="{{ path('app_admin_rooms') }}" class="admin-link">
-        <h3>🏢 Gérer les salles</h3>
-        <p>Créer, voir et modifier les salles avec leurs équipements</p>
+<div class="admin-actions">
+    <a href="{{ path('app_admin_rooms') }}" class="action-card">
+        <div class="action-icon">🏢</div>
+        <div class="action-title">Gestion des Salles</div>
+        <div class="action-desc">Ajoutez, modifiez ou supprimez des salles et configurez leurs équipements.</div>
     </a>
-    <a href="{{ path('app_admin_classes') }}" class="admin-link">
-        <h3>🎓 Gérer les classes</h3>
-        <p>Créer et gérer les promotions et leurs étudiants</p>
+    <a href="{{ path('app_admin_classes') }}" class="action-card">
+        <div class="action-icon">🎓</div>
+        <div class="action-title">Gestion des Classes</div>
+        <div class="action-desc">Gérez les promotions (Bachelor, Mastère) et affectez les étudiants.</div>
     </a>
-    <a href="{{ path('app_admin_users') }}" class="admin-link">
-        <h3>👥 Gérer les utilisateurs</h3>
-        <p>Gérer les comptes, rôles et réinitialiser les mots de passe</p>
+    <a href="{{ path('app_admin_users') }}" class="action-card">
+        <div class="action-icon">👥</div>
+        <div class="action-title">Utilisateurs</div>
+        <div class="action-desc">Contrôlez les accès, changez les rôles ou réinitialisez les mots de passe.</div>
     </a>
-    <a href="{{ path('app_admin_reservations') }}" class="admin-link">
-        <h3>🛡️ Gérer les réservations</h3>
-        <p>Voir tout le planning et annuler des créneaux si besoin</p>
+    <a href="{{ path('app_admin_reservations') }}" class="action-card">
+        <div class="action-icon">🛡️</div>
+        <div class="action-title">Supervision</div>
+        <div class="action-desc">Modérez l'ensemble des réservations et libérez des créneaux si nécessaire.</div>
     </a>
 </div>
 {% endblock %}

@@ -13,8 +13,14 @@ class DashboardController extends AbstractController
     #[Route('/', name: 'app_dashboard')]
     public function index(RoomRepository $roomRepository, ReservationRepository $reservationRepository): Response
     {
-        $user = $this->getUser();
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_admin');
+        }
+        if ($this->isGranted('ROLE_PROFESSEUR')) {
+            return $this->redirectToRoute('app_coordinator');
+        }
 
+        $user = $this->getUser();
         $rooms = $roomRepository->findAll();
         $reservations = $reservationRepository->findBy(
             ['utilisateur' => $user],

@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Choisir une salle{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .back-nav { margin-bottom: 2rem; }
+    .back-link {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--primary); }
+
+    .room-selection-header { margin-bottom: 3rem; }
+    .room-selection-header h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        background: linear-gradient(to right, white, var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+    .room-selection-header p { color: var(--text-dim); font-size: 1.2rem; }
+
+    .rooms-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 2rem;
+    }
+
+    .room-card-large {
+        background: var(--bg-card);
+        border: 1px solid var(--glass-border);
+        border-radius: 28px;
+        padding: 2rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .room-card-large:hover {
+        border-color: var(--primary);
+        transform: translateY(-8px);
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+    }
+
+    .room-header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .room-title-lg {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: white;
+        letter-spacing: -0.02em;
+    }
+
+    .capacity-badge {
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--primary);
+        padding: 0.4rem 0.8rem;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 0.8rem;
+        border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .room-description-lg {
+        color: var(--text-dim);
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .equipment-list-lg {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+    }
+
+    .equipment-item-lg {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        color: var(--text-main);
+        padding: 0.3rem 0.75rem;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .btn-full {
+        width: 100%;
+        justify-content: center;
+        margin-top: auto;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="back-nav">
+    <a href="{{ path('app_reservation_calendar') }}" class="back-link">
+        <span>←</span> Retour au calendrier
+    </a>
+</div>
+
+<div class="room-selection-header">
+    <h1>Salles disponibles</h1>
+    <p>Pour le {{ selectedDate|date('d F Y') }}</p>
+</div>
+
+<div class="rooms-grid">
+    {% for room in rooms %}
+        <div class="room-card-large">
+            <div class="room-header-flex">
+                <div class="room-title-lg">{{ room.nomSalle }}</div>
+                <div class="capacity-badge">{{ room.capacite }} Places</div>
+            </div>
+
+            <p class="room-description-lg">{{ room.description }}</p>
+
+            <div class="equipment-list-lg">
+                {% for equip in room.equipements %}
+                    <span class="equipment-item-lg">{{ equip.nomEquipement }}</span>
+                {% endfor %}
+            </div>
+
+            <a href="{{ path('app_reservation_planning', {id: room.id, date: selectedDate}) }}" class="btn-gradient btn-full">
+                Voir le planning
+            </a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

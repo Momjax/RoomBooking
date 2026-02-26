@@ -13,32 +13,29 @@
 {% endblock %}
 {% block body %}
 <div class="page-header">
-    <div>
-        <h1>🎓 {{ classe.classeName }}</h1>
-        <p style="color: #94a3b8;">Liste des étudiants de la promotion</p>
-    </div>
-    <a href="{{ path('app_coordinator_add_student', {id: classe.id}) }}" class="btn-add">+ Ajouter un étudiant</a>
+    <h1>{{ classe.classeName }}</h1>
 </div>
 
-<div class="table-container">
-    <table>
-        <thead><tr><th>Étudiant</th><th>Email</th><th>Actions</th></tr></thead>
-        <tbody>
-        {% for student in classe.etudiants %}
-            <tr>
-                <td><strong>{{ student.fullName }}</strong></td>
-                <td>{{ student.email }}</td>
-                <td>
-                    <form method="post" action="{{ path('app_coordinator_remove_student', {classeId: classe.id, studentId: student.id}) }}" onsubmit="return confirm('Retirer cet étudiant de la classe ?')">
-                        <button class="btn-delete">Retirer</button>
-                    </form>
-                </td>
-            </tr>
-        {% else %}
-            <tr><td colspan="3" style="text-align: center; color: #64748b; padding: 2rem;">Aucun étudiant dans cette classe.</td></tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1.5rem; position: relative; margin-bottom: 5rem;">
+    <div style="font-weight: 700; margin-bottom: 1rem; border-bottom: 1px solid #334155; padding-bottom: 0.5rem;">
+        Elèves ({{ classe.etudiants|length }})
+    </div>
+    
+    {% for student in classe.etudiants %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid #334155;">
+            <div style="font-size: 0.95rem;">{{ student.fullName }}</div>
+            <form method="post" action="{{ path('app_coordinator_remove_student', {classeId: classe.id, studentId: student.id}) }}" onsubmit="return confirm('Retirer cet élève ?')">
+                <button style="background: none; border: none; cursor: pointer; color: #ef4444; font-size: 1.1rem;">🗑️</button>
+            </form>
+        </div>
+    {% else %}
+        <div style="padding: 2rem; text-align: center; color: #64748b;">Aucun élève dans cette classe</div>
+    {% endfor %}
 </div>
-<a href="{{ path('app_coordinator') }}" style="display: inline-block; margin-top: 1.5rem; color: #94a3b8; text-decoration: none;">← Retour à mes classes</a>
+
+<div style="display: flex; gap: 1rem; align-items: center; justify-content: flex-end; margin-bottom: 2rem;">
+    <a href="{{ path('app_coordinator') }}" style="color: #94a3b8; text-decoration: none; border: 1px solid #334155; padding: 0.6rem 1.2rem; border-radius: 10px; transition: all 0.2s;">← Retour</a>
+    <a href="{{ path('app_coordinator_add_student', {id: classe.id}) }}" style="background: #334155; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 10px; text-decoration: none; transition: all 0.2s;">+ Assigner</a>
+    <a href="{{ path('app_coordinator_create_student', {id: classe.id}) }}" style="background: linear-gradient(135deg, #38bdf8, #818cf8); color: #0f172a; border: none; padding: 0.6rem 1.2rem; border-radius: 10px; font-weight: 700; text-decoration: none; transition: all 0.2s;">+ Créer</a>
+</div>
 {% endblock %}

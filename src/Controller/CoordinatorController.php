@@ -18,12 +18,21 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class CoordinatorController extends AbstractController
 {
     #[Route('', name: 'app_coordinator')]
-    public function index(): Response
+    public function index(\App\Repository\ReservationRepository $reservationRepository): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $classesGerees = $user->getClassesGerees();
 
-        return $this->render('coordinator/index.html.twig', [
+        $totalStudents = 0;
+        foreach ($classesGerees as $classe) {
+            $totalStudents += count($classe->getEtudiants());
+        }
+
+        return $this->render('coordinator/dashboard.html.twig', [
+            'totalClasses' => count($classesGerees),
+            'totalStudents' => $totalStudents,
+            'totalReservations' => count($reservationRepository->findAll()),
             'classes' => $classesGerees,
         ]);
     }
@@ -114,5 +123,50 @@ class CoordinatorController extends AbstractController
         }
 
         return $this->redirectToRoute('app_coordinator_classe_show', ['id' => $classeId]);
+    }
+
+    #[Route('/classe/{id}/create-student', name: 'app_coordinator_create_student', methods: ['GET', 'POST'])]
+    public function createStudent(
+        int $id,
+        Request $request,
+        ClasseRepository $classeRepository,
+        UserRepository $userRepository,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response {
+        $classe = $classeRepository->find($id);
+        $user = $this->getUser();
+
+        if (!$user->getClassesGerees()->contains($classe)) {
+            $this->addFlash('error', 'Vous ne gérez pas cette classe.');
+            return $this->redirectToRoute('app_coordinator');
+        }
+
+        if ($request->isMethod('POST')) {
+            $email = $request->request->get('email');
+
+            if ($userRepository->findOneBy(['email' => $email])) {
+                $this->addFlash('error', "Cet email est déjà utilisé.");
+                return $this->redirectToRoute('app_coordinator_create_student', ['id' => $id]);
+            }
+
+            $newStudent = new User();
+            $newStudent->setEmail($email);
+            $newStudent->setFirstname($request->request->get('firstname'));
+            $newStudent->setLastname($request->request->get('lastname'));
+            $newStudent->setRoles(['ROLE_USER']);
+            $newStudent->setPassword($passwordHasher->hashPassword($newStudent, $request->request->get('password')));
+            $newStudent->setClasse($classe);
+
+            $em->persist($newStudent);
+            $em->flush();
+
+            $this->addFlash('success', 'Nouvel étudiant "' . $newStudent->getFullName() . '" créé et affecté à la classe !');
+            return $this->redirectToRoute('app_coordinator_classe_show', ['id' => $id]);
+        }
+
+        return $this->render('coordinator/create_student.html.twig', [
+            'classe' => $classe,
+        ]);
     }
 }

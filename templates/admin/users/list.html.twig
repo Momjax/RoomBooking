@@ -19,41 +19,51 @@
 {% endblock %}
 {% block body %}
 <div class="page-header">
-    <h1>👥 Gestion des utilisateurs</h1>
-    <a href="{{ path('app_admin_user_create') }}" class="btn-create">+ Créer un utilisateur</a>
+    <h1>{{ title }}</h1>
 </div>
-<div class="table-container">
+
+<div class="table-container" style="position: relative;">
     <table>
-        <thead><tr><th>Utilisateur</th><th>Email</th><th>Rôle</th><th>Classe / Gestion</th><th>Actions</th></tr></thead>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>{{ type == 'coordinator' ? 'Classes' : 'Classe' }}</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
         <tbody>
         {% for user in users %}
             <tr>
+                <td>{{ user.id }}</td>
                 <td><strong>{{ user.fullName }}</strong></td>
-                <td>{{ user.email }}</td>
                 <td>
-                    {% if 'ROLE_ADMIN' in user.roles %}<span class="role-tag role-admin">ADMIN</span>
-                    {% elseif 'ROLE_PROFESSEUR' in user.roles %}<span class="role-tag role-prof">PROF</span>
-                    {% else %}<span class="role-tag role-user">ÉLÈVE</span>{% endif %}
-                </td>
-                <td>
-                    {% if user.classe %}{{ user.classe.classeName }}
-                    {% elseif user.classesGerees|length > 0 %}{{ user.classesGerees|length }} classe(s) gérée(s)
-                    {% else %}-{% endif %}
-                </td>
-                <td>
-                    <a href="{{ path('app_admin_user_edit', {id: user.id}) }}" class="btn-action" style="background:#8b5cf6; color:white;">Modifier</a>
-                    <form method="post" action="{{ path('app_admin_user_reset_password', {id: user.id}) }}" style="display:inline" onsubmit="return confirm('Réinitialiser le mot de passe de cet utilisateur ?')">
-                        <button class="btn-action btn-reset">Reset MDP</button>
-                    </form>
-                    {% if user != app.user %}
-                        <form method="post" action="{{ path('app_admin_user_delete', {id: user.id}) }}" style="display:inline" onsubmit="return confirm('Supprimer cet utilisateur ?')">
-                            <button class="btn-action btn-delete">Supprimer</button>
-                        </form>
+                    {% if user.classe %}
+                        {{ user.classe.classeName }}
+                    {% elseif user.classesGerees|length > 0 %}
+                        {% for c in user.classesGerees %}{{ c.classeName }}{% if not loop.last %}, {% endif %}{% endfor %}
+                    {% else %}
+                        -
                     {% endif %}
+                </td>
+                <td>
+                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                        <div style="display: flex; gap: 0.3rem;">
+                            <form method="post" action="{{ path('app_admin_user_delete', {id: user.id}) }}" onsubmit="return confirm('Supprimer cet utilisateur ?')" style="flex: 1;">
+                                <button class="btn-delete" style="width: 100%; padding: 0.4rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Supprimer</button>
+                            </form>
+                            <a href="{{ path('app_admin_user_show', {id: user.id}) }}" class="btn-view" style="flex: 1; text-align: center; background: #6366f1; color: white; padding: 0.4rem; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 600;">Voir</a>
+                        </div>
+                        <form method="post" action="{{ path('app_admin_user_reset_password', {id: user.id}) }}" onsubmit="return confirm('Réinitialiser le mot de passe ?')">
+                            <button class="btn-reset" style="width: 100%; background: #334155; color: white; padding: 0.4rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">Réinitialiser le MDP</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    
+    <a href="{{ path('app_admin_user_create') }}" class="fab">+</a>
 </div>
 {% endblock %}

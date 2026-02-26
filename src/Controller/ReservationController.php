@@ -17,6 +17,53 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class ReservationController extends AbstractController
 {
+    #[Route('/calendar', name: 'app_reservation_calendar')]
+    public function calendar(): Response
+    {
+        // Simple calendar view - current month
+        return $this->render('reservation/calendar.html.twig', [
+            'now' => new \DateTime(),
+        ]);
+    }
+
+    #[Route('/choose-room', name: 'app_reservation_choose_room')]
+    public function chooseRoom(Request $request, RoomRepository $roomRepository): Response
+    {
+        $date = $request->query->get('date', (new \DateTime())->format('Y-m-d'));
+        return $this->render('reservation/choose_room.html.twig', [
+            'rooms' => $roomRepository->findAll(),
+            'selectedDate' => $date,
+        ]);
+    }
+
+    #[Route('/planning/{id}', name: 'app_reservation_planning')]
+    public function roomPlanning(Room $room, Request $request, ReservationRepository $resRepo): Response
+    {
+        $dateStr = $request->query->get('date', (new \DateTime())->format('Y-m-d'));
+        $date = new \DateTime($dateStr);
+
+        // Get reservations for this room and day
+        $startOfDay = clone $date;
+        $startOfDay->setTime(0, 0, 0);
+        $endOfDay = clone $date;
+        $endOfDay->setTime(23, 59, 59);
+
+        $reservations = $resRepo->createQueryBuilder('r')
+            ->where('r.room = :room')
+            ->andWhere('r.reservationStart >= :start')
+            ->andWhere('r.reservationStart <= :end')
+            ->setParameter('room', $room)
+            ->setParameter('start', $startOfDay)
+            ->setParameter('end', $endOfDay)
+            ->getQuery()->getResult();
+
+        return $this->render('reservation/planning.html.twig', [
+            'room' => $room,
+            'date' => $date,
+            'reservations' => $reservations,
+        ]);
+    }
+
     #[Route('/new/{id}', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     public function new(Room $room, Request $request, ReservationRepository $resRepo, EntityManagerInterface $em): Response
     {
@@ -24,19 +71,16 @@ class ReservationController extends AbstractController
             $start = new \DateTime($request->request->get('start_date') . ' ' . $request->request->get('start_time'));
             $end = new \DateTime($request->request->get('end_date') . ' ' . $request->request->get('end_time'));
 
-            // Sécurité : fin doit être après début
             if ($end <= $start) {
                 $this->addFlash('error', 'L\'heure de fin doit être après l\'heure de début.');
                 return $this->redirectToRoute('app_reservation_new', ['id' => $room->getId()]);
             }
 
-            // Sécurité : pas de réservation dans le passé
-            if ($start < new \DateTime()) {
+            if ($start < (new \DateTime())->modify('-5 minutes')) {
                 $this->addFlash('error', 'Vous ne pouvez pas réserver dans le passé.');
                 return $this->redirectToRoute('app_reservation_new', ['id' => $room->getId()]);
             }
 
-            // Vérification de disponibilité via le Repository
             if (!$resRepo->isRoomAvailable($room->getId(), $start, $end)) {
                 $this->addFlash('error', 'Désolé, cette salle est déjà occupée sur ce créneau.');
                 return $this->redirectToRoute('app_reservation_new', ['id' => $room->getId()]);
@@ -47,6 +91,7 @@ class ReservationController extends AbstractController
             $reservation->setUtilisateur($this->getUser());
             $reservation->setReservationStart($start);
             $reservation->setReservationEnd($end);
+            $reservation->setStatus('VALIDE');
 
             $em->persist($reservation);
             $em->flush();
@@ -57,6 +102,8 @@ class ReservationController extends AbstractController
 
         return $this->render('reservation/new.html.twig', [
             'room' => $room,
+            'prefilledDate' => $request->query->get('date'),
+            'prefilledHour' => $request->query->get('hour'),
         ]);
     }
 

@@ -30,15 +30,30 @@ class AdminController extends AbstractController
     public function index(
         RoomRepository $roomRepository,
         UserRepository $userRepository,
-        ClasseRepository $classeRepository
+        ClasseRepository $classeRepository,
+        ReservationRepository $reservationRepository
     ): Response {
+        $users = $userRepository->findAll();
+
+        $totalClasses = count($classeRepository->findAll());
+        $totalStudents = 0;
+        $totalCoordinators = 0;
+
+        foreach ($users as $user) {
+            if (in_array('ROLE_ADMIN', $user->getRoles()))
+                continue;
+            if (in_array('ROLE_PROFESSEUR', $user->getRoles())) {
+                $totalCoordinators++;
+            } else {
+                $totalStudents++;
+            }
+        }
+
         return $this->render('admin/index.html.twig', [
-            'rooms' => $roomRepository->findAll(),
-            'users' => $userRepository->findAll(),
-            'classes' => $classeRepository->findAll(),
-            'totalRooms' => count($roomRepository->findAll()),
-            'totalUsers' => count($userRepository->findAll()),
-            'totalClasses' => count($classeRepository->findAll()),
+            'totalClasses' => $totalClasses,
+            'totalStudents' => $totalStudents,
+            'totalCoordinators' => $totalCoordinators,
+            'totalReservations' => count($reservationRepository->findAll()),
         ]);
     }
 
@@ -130,10 +145,11 @@ class AdminController extends AbstractController
     }
 
     #[Route('/rooms/{id}', name: 'app_admin_room_show')]
-    public function showRoom(Room $room): Response
+    public function showRoom(Room $room, ReservationRepository $reservationRepository): Response
     {
         return $this->render('admin/rooms/show.html.twig', [
             'room' => $room,
+            'reservations' => $reservationRepository->findBy(['room' => $room], ['reservationStart' => 'ASC']),
         ]);
     }
 
@@ -219,13 +235,47 @@ class AdminController extends AbstractController
     // GESTION DES UTILISATEURS
     // ============================================================
     #[Route('/users', name: 'app_admin_users')]
-    public function users(UserRepository $userRepository): Response
+    public function users(Request $request, UserRepository $userRepository): Response
     {
+        $type = $request->query->get('type');
+        $allUsers = $userRepository->findAll();
+        $filteredUsers = [];
+        $title = "Gestion des utilisateurs";
+
+        if ($type === 'student') {
+            $title = "Liste des élèves";
+            foreach ($allUsers as $user) {
+                if (!in_array('ROLE_PROFESSEUR', $user->getRoles()) && !in_array('ROLE_ADMIN', $user->getRoles())) {
+                    $filteredUsers[] = $user;
+                }
+            }
+        } elseif ($type === 'coordinator') {
+            $title = "Liste des intervenant";
+            foreach ($allUsers as $user) {
+                if (in_array('ROLE_PROFESSEUR', $user->getRoles())) {
+                    $filteredUsers[] = $user;
+                }
+            }
+        } else {
+            $filteredUsers = $allUsers;
+        }
+
         return $this->render('admin/users/list.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $filteredUsers,
+            'title' => $title,
+            'type' => $type,
         ]);
     }
 
+
+    #[Route('/users/{id}', name: 'app_admin_user_show')]
+    public function showUser(User $user, ReservationRepository $resRepo): Response
+    {
+        return $this->render('admin/users/show.html.twig', [
+            'user' => $user,
+            'reservations' => $resRepo->findBy(['utilisateur' => $user], ['reservationStart' => 'DESC']),
+        ]);
+    }
 
     #[Route('/users/create', name: 'app_admin_user_create', methods: ['GET', 'POST'])]
     public function createUser(

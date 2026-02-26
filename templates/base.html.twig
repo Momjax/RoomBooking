@@ -4,73 +4,228 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}RoomBooking{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
-            min-height: 100vh;
+        :root {
+            --bg-deep: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --primary: #38bdf8;
+            --secondary: #f472b6;
+            --accent: #6366f1;
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shine: rgba(255, 255, 255, 0.05);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-deep);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(244, 114, 182, 0.1) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
         .navbar {
-            background: linear-gradient(135deg, #1e293b, #334155);
-            padding: 1rem 2rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0.75rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #475569;
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
+
         .navbar-brand {
             font-size: 1.5rem;
-            font-weight: 700;
-            color: #38bdf8;
+            font-weight: 800;
+            color: white;
             text-decoration: none;
-        }
-        .navbar-brand span { color: #f472b6; }
-        .navbar-nav { display: flex; gap: 1.5rem; align-items: center; }
-        .navbar-nav a {
-            color: #94a3b8;
-            text-decoration: none;
-            transition: color 0.2s;
-            font-weight: 500;
-        }
-        .navbar-nav a:hover { color: #38bdf8; }
-        .navbar-user {
-            color: #e2e8f0;
-            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            letter-spacing: -0.02em;
         }
-        .btn-logout {
-            background: #ef4444;
-            color: white;
-            border: none;
+
+        .navbar-brand span {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .navbar-nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
             padding: 0.5rem 1rem;
             border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .navbar-nav a:hover, .navbar-nav a.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .navbar-nav a.active {
+            color: var(--primary);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--glass-shine);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
             cursor: pointer;
-            font-weight: 600;
-            transition: background 0.2s;
+            transition: all 0.2s;
+        }
+
+        .user-pill:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
             text-decoration: none;
-            font-size: 0.85rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.3);
         }
-        .btn-logout:hover { background: #dc2626; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .flash-success {
-            background: #065f46;
-            border: 1px solid #10b981;
-            color: #a7f3d0;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(56, 189, 248, 0.4);
+            filter: brightness(1.1);
         }
-        .flash-error {
-            background: #7f1d1d;
-            border: 1px solid #ef4444;
-            color: #fecaca;
+
+        .flash-msg {
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .flash-success { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; }
+        .flash-error { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; }
+
+        #userDropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: #1e293b;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            width: 200px;
+            z-index: 1000;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        #userDropdown a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        #userDropdown a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--primary);
+        }
+
+        /* Responsive Improvements */
+        @media (max-width: 768px) {
+            .navbar { padding: 0.75rem 1rem; }
+            .navbar-nav { display: none; }
+            .user-pill span { display: none; }
         }
     </style>
     {% block stylesheets %}{% endblock %}
@@ -78,32 +233,65 @@
 <body>
     {% if app.user %}
     <nav class="navbar">
-        <a href="{{ path('app_dashboard') }}" class="navbar-brand">Room<span>Booking</span></a>
+        <a href="{{ path('app_dashboard') }}" class="navbar-brand">
+            Room<span>Booking</span>
+        </a>
+
         <div class="navbar-nav">
-            <a href="{{ path('app_dashboard') }}">🏠 Salles</a>
-            <a href="{{ path('app_my_reservations') }}">📅 Mes Réservations</a>
+            <a href="{{ path('app_dashboard') }}" class="{{ app.request.attributes.get('_route') == 'app_dashboard' ? 'active' : '' }}">Tableau de bord</a>
+            <a href="{{ path('app_reservation_calendar') }}" class="{{ app.request.attributes.get('_route') starts with 'app_reservation' ? 'active' : '' }}">Réserver</a>
             {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('app_admin') }}">⚙️ Admin</a>
+                <a href="{{ path('app_admin') }}" class="{{ app.request.attributes.get('_route') starts with 'app_admin' ? 'active' : '' }}">Admin</a>
             {% endif %}
             {% if is_granted('ROLE_PROFESSEUR') %}
-                <a href="{{ path('app_coordinator') }}">📚 Mes classes</a>
+                <a href="{{ path('app_coordinator') }}" class="{{ app.request.attributes.get('_route') starts with 'app_coordinator' ? 'active' : '' }}">Coordinateur</a>
             {% endif %}
-            <a href="{{ path('app_profile') }}" class="navbar-user">👤 {{ app.user.firstname }}</a>
-            <a href="{{ path('app_logout') }}" class="btn-logout">Déconnexion</a>
+        </div>
+
+        <div class="user-section">
+            <div style="position: relative;">
+                <div class="user-pill" id="userMenuBtn">
+                    <div class="user-avatar">{{ app.user.firstname|first|upper }}{{ app.user.lastname|first|upper }}</div>
+                    <span style="font-weight: 600; font-size: 0.85rem;">{{ app.user.firstname }} {{ app.user.lastname|upper }}</span>
+                </div>
+                
+                <div id="userDropdown">
+                    <a href="{{ path('app_profile') }}">👤 Mon profil</a>
+                    <a href="{{ path('app_my_reservations') }}">📅 Mes réservations</a>
+                    <div style="border-top: 1px solid var(--glass-border);"></div>
+                    <a href="{{ path('app_logout') }}" style="color: #f87171;">🚪 Déconnexion</a>
+                </div>
+            </div>
         </div>
     </nav>
+
+    <script>
+        const btn = document.getElementById('userMenuBtn');
+        const dropdown = document.getElementById('userDropdown');
+        
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        };
+
+        window.onclick = (e) => {
+            if (!e.target.closest('#userMenuBtn')) {
+                dropdown.style.display = 'none';
+            }
+        };
+    </script>
     {% endif %}
 
-    <div class="container">
+    <main class="container">
         {% for message in app.flashes('success') %}
-            <div class="flash-success">✅ {{ message }}</div>
+            <div class="flash-msg flash-success"><span>✓</span> {{ message }}</div>
         {% endfor %}
         {% for message in app.flashes('error') %}
-            <div class="flash-error">❌ {{ message }}</div>
+            <div class="flash-msg flash-error"><span>✕</span> {{ message }}</div>
         {% endfor %}
 
         {% block body %}{% endblock %}
-    </div>
+    </main>
 
     {% block javascripts %}{% endblock %}
 </body>

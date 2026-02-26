@@ -16,27 +16,41 @@
 {% endblock %}
 {% block body %}
 <div class="page-header">
-    <h1>🎓 Gestion des classes</h1>
-    <a href="{{ path('app_admin_classe_create') }}" class="btn-create">+ Créer une classe</a>
+    <h1>Liste des classes</h1>
 </div>
-<div class="table-container">
+
+<div class="table-container" style="position: relative;">
     <table>
-        <thead><tr><th>Nom</th><th>Nb étudiants</th><th>Actions</th></tr></thead>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Etudiants</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
         <tbody>
         {% for classe in classes %}
             <tr>
+                <td>{{ classe.id }}</td>
                 <td><strong>{{ classe.classeName }}</strong></td>
-                <td>{{ classe.etudiants|length }} étudiants</td>
+                <td>{{ classe.etudiants|length }}</td>
                 <td>
-                    <a href="{{ path('app_admin_classe_show', {id: classe.id}) }}" class="btn-view">Voir</a>
-                    <a href="{{ path('app_admin_classe_edit', {id: classe.id}) }}" class="btn-edit" style="background:#8b5cf6; color:white; padding: 0.4rem 0.8rem; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 600; margin-right: 0.3rem;">Modifier</a>
-                    <form method="post" action="{{ path('app_admin_classe_delete', {id: classe.id}) }}" style="display:inline" onsubmit="return confirm('Supprimer cette classe ?')">
-                        <button class="btn-danger">Supprimer</button>
-                    </form>
+                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                        <div style="display: flex; gap: 0.3rem;">
+                            <form method="post" action="{{ path('app_admin_classe_delete', {id: classe.id}) }}" onsubmit="return confirm('Supprimer cette classe ?')" style="flex: 1;">
+                                <button class="btn-danger" style="width: 100%;">Supprimer</button>
+                            </form>
+                            <a href="{{ path('app_admin_classe_show', {id: classe.id}) }}" class="btn-view" style="flex: 1; text-align: center;">Voir</a>
+                        </div>
+                        <a href="#" class="btn-action" style="background: #334155; color: white; padding: 0.4rem; border-radius: 8px; text-decoration: none; font-size: 0.75rem; text-align: center; font-weight: 600;">Réinitialiser le MDP</a>
+                    </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    
+    <a href="{{ path('app_admin_classe_create') }}" class="fab" style="position: fixed; bottom: 2rem; right: 2rem; background: #334155; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 2px solid #475569;">+</a>
 </div>
 {% endblock %}
